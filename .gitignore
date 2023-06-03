@@ -1,0 +1,5 @@
+/vendor
+/src/storage/series.json
+/src/storage/vods.json
+/src/storage/vods_category.json
+/src/storage/series_category.json

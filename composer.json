@@ -1,0 +1,9 @@
+{
+    "require": {
+        "voku/anti-xss": "^4.1",
+        "slim/php-view": "^3.2",
+        "slim/slim": "^4.11",
+        "slim/http": "^0.4.0",
+        "slim/psr7": "^1.6"
+    }
+}
