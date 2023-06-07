@@ -201,6 +201,7 @@ class RoutesController
 
         if ($check) {
 
+            session_start();
             $_SESSION['token'] = $check;
             header('Location: /');
             exit();

@@ -1,9 +1,9 @@
 <?php
 use Slim\Factory\AppFactory;
-use Slim\Routing\RouteCollectorProxy;
 
-
-session_start();
+if (isset($_COOKIE['PHPSESSID'])) {
+    session_start();
+}
 
 require "./vendor/autoload.php";
 $app = AppFactory::create();
