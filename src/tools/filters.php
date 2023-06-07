@@ -35,7 +35,7 @@ class Filters
     public function isAlNum($str, $condition = '')
     {
 
-        if (preg_match('/[^a-zA-Z0-9'.$condition.']/', $str) > 0) {
+        if (preg_match('/[^a-zA-Z0-9' . $condition . ']/', $str) > 0) {
             return false;
         } else {
             return true;
@@ -54,11 +54,19 @@ class Filters
         $condition == null ? $regex = '/[^a-zA-Zà-úÀ-Ú0-9]/u' : $regex = '/[^a-zA-Zà-úÀ-Ú0-9' . $condition . ']/u';
         return preg_replace($regex, '', $str);
     }
-    
+
     public function Num($str, $condition = null)
     {
         $condition == null ? $regex = '/[^0-9]/u' : $regex = '/[^0-9' . $condition . ']/u';
         return preg_replace($regex, '', $str);
+    }
+
+    public function termSearch($term)
+    {
+        $normalizer = Normalizer::normalize($term, Normalizer::FORM_D);
+        $normalizer = preg_replace('/\p{Mn}/u', '', $normalizer);
+
+        return strtolower(trim($normalizer));
     }
 
 
@@ -72,17 +80,19 @@ class Filters
     }
 
 
-    public function emailValid($email) {
+    public function emailValid($email)
+    {
         return preg_match('/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', $email);
     }
 
-    public function generateUUID($data = null) {
+    public function generateUUID($data = null)
+    {
         $data = $data ?? random_bytes(16);
         assert(strlen($data) == 16);
-    
+
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
-    
+
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
@@ -95,5 +105,4 @@ class Filters
 
         return true;
     }
-
 }

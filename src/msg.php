@@ -15,7 +15,12 @@
 
         // Success
 
-        "create_account" => "User successfully registered."
+        "create_account" => "User successfully registered.",
+
+        // Search
+
+        "caracteres_search" => "You need to provide a minimum of 2 characters or a maximum of 20 characters to search."
+
 
     ]), false);
 

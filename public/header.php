@@ -30,7 +30,7 @@
                             <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuCatalog">
                                 <li><a href="/catalog/movies/0/1"><?= $language->header->view_all ?></a></li>
                                 <?php foreach ($category['vods'] as $row) { ?>
-                                    <li><a href="/catalog/movies/<?=$row->category_id?>/1"><?= $row->category_name ?></a></li>
+                                    <li><a href="/catalog/movies/<?= $row->category_id ?>/1"><?= $row->category_name ?></a></li>
                                 <?php } ?>
 
                             </ul>
@@ -45,7 +45,7 @@
                             <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuCatalog">
                                 <li><a href="/catalog/series/0/1"><?= $language->header->view_all ?></a></li>
                                 <?php foreach ($category['series'] as $row) { ?>
-                                    <li><a href="/catalog/series/<?=$row->category_id?>/1"><?= $row->category_name ?></a></li>
+                                    <li><a href="/catalog/series/<?= $row->category_id ?>/1"><?= $row->category_name ?></a></li>
                                 <?php } ?>
                             </ul>
                         </li>
@@ -53,7 +53,7 @@
 
 
                         <!-- dropdown -->
-                        <li class="dropdown header__nav-item">
+                        <li hidden class="dropdown header__nav-item">
                             <a class="dropdown-toggle header__nav-link header__nav-link--more" href="#" role="button" id="dropdownMenuMore" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon ion-ios-more"></i></a>
 
                             <ul class="dropdown-menu header__dropdown-menu scrollbar-dropdown" aria-labelledby="dropdownMenuMore">
@@ -75,15 +75,15 @@
 
                     <!-- header auth -->
                     <div class="header__auth">
-                        <form action="#" class="header__search">
-                            <input class="header__search-input" type="text" placeholder="<?= $language->header->search ?>">
-                            <button class="header__search-button" type="button">
+                        <div class="header__search">
+                            <input id="search" class="header__search-input" type="text" placeholder="<?= $language->header->search ?>">
+                            <button onclick="Search(document.getElementById('search').value)" class="header__search-button" type="button">
                                 <i class="icon ion-ios-search"></i>
                             </button>
-                            <button class="header__search-close" type="button">
+                            <button onclick="Search(document.getElementById('search').value)" class="header__search-close" type="button">
                                 <i class="icon ion-md-close"></i>
                             </button>
-                        </form>
+                        </div>
 
                         <button class="header__search-btn" type="button">
                             <i class="icon ion-ios-search"></i>
@@ -92,11 +92,11 @@
                         <!-- dropdown -->
                         <div class="dropdown header__lang">
 
-                            <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdownMenuLang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $lang_opt['now']?> <i class="icon ion-ios-arrow-down"></i></a>
+                            <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdownMenuLang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $lang_opt['now'] ?> <i class="icon ion-ios-arrow-down"></i></a>
 
                             <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuLang">
                                 <?php foreach ($lang_opt['opts'] as $ind => $row) { ?>
-                                    <li><a onclick="setLanguage('<?=$ind?>')" href="#"><?=$row[0]?></a></li>
+                                    <li><a onclick="setLanguage('<?= $ind ?>')" href="#"><?= $row[0] ?></a></li>
                                 <?php } ?>
 
                             </ul>

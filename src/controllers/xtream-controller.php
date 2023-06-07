@@ -329,6 +329,59 @@ class Xtream
     }
 
 
+    public function searchByTerm($term, $filters)
+    {
+
+
+        function compare($searching, $title)
+        {
+            $pattern = '/' . $searching . '/';
+
+            if (preg_match($pattern, $title)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        $get_movies  = json_decode(file_get_contents($this->path . '/' . 'vods.json'));
+        $get_series  = json_decode(file_get_contents($this->path . '/' . 'series.json'));
+
+        $arr = [];
+
+        foreach ($get_movies as $ind => $row) {
+            if (compare($term, $filters->termSearch($row->name))) {
+                $arr[] = $row;
+            }
+        }
+
+        $results = json_decode($this->organizerVods($arr));
+        $arr = [];
+
+        foreach ($get_series as $ind => $row) {
+            if (compare($term, $filters->termSearch($row->name))) {
+                $arr[] = $row;
+            }
+        }
+
+        $tmp_results = json_decode($this->organizerSeries($arr));
+
+        foreach ($tmp_results as $row) {
+            $results[] = $row;
+        }
+       
+        $results = $this->desc_asc_Movie($results);
+
+
+        return json_decode(json_encode([
+            'term' => $term,
+            'qtd' => count($results),
+            'data' => $results
+        ]));
+    }
+
+
+
 
 
 

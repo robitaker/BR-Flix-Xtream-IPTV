@@ -318,6 +318,39 @@ class RoutesController
     }
 
 
+    public function Search($req, $res, $args)
+    {
+        $filters = $this->filters;
+        $msg = false;
+
+        $term = $filters->termSearch($filters->AlNum($args['search'], ' !?@,:._-'));
+
+        if (strlen($term) > 2 && strlen($term) < 20) {
+            $results = $this->xtream->searchByTerm($filters->Xss($term), $filters);
+
+        } else {
+            $msg = $this->msg->caracteres_search;
+            $results = json_decode(json_encode([
+                'term' => $term,
+                'qtd' => 0,
+                'data' => []
+            ]));
+        }
+
+        $body = [
+            'profile' => $this->isLogged(),
+            'lang_opt' => $this->Language(true),
+            'language' => $this->Language(),
+            'category' => $this->xtream->getAllCategory(),
+            'msg' => $msg,
+            'results' => $results
+        ];
+
+        return $this->renderer->render($res, "search.php", $body);
+    }
+
+
+
 
 
     public function pageError($req, $res, $args)

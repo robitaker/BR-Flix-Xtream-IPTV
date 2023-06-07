@@ -46,6 +46,12 @@ $translation =  [
         'genre' => 'Genre',
         'series' => 'Series',
         'films' => 'Movies'
+    ],
+
+    'search' => [
+        'found' => 'Results found',
+        'title_not_found' => 'Oops, nothing found :/',
+        'search' => 'Search'
     ]
 
 ];

@@ -29,6 +29,17 @@ function scrollToPlayer() {
 }
 
 
+function urlencode(str) {
+    str = (str + '').toString();
+
+    return encodeURIComponent(str)
+        .replace('!', '%21')
+        .replace('\'', '%27')
+        .replace('(', '%28')
+        .replace(')', '%29')
+        .replace('*', '%2A');
+}
+
 
 
 
@@ -78,19 +89,37 @@ function watchSerie(temp, ep_num) {
     $('#player').attr('src', `/watch/series/${ep.id}/${ep.extension}`);
     $('#title_serie').text(ep.name);
     $('#img_serie').attr('src', ep.img);
-    $('#name_ep_'+ep_num).css('color', '#4bc658');
+    $('#name_ep_' + ep_num).css('color', '#4bc658');
     $('#watch_player').attr('hidden', false);
     scrollToPlayer();
 
 }
 
+function Search(term) {
+    if (term.length > 2) {
+        window.location.href = '/search/' + urlencode(term);
+    }
+}
 
-$('#list_type li').click(function () {    
+
+$('#list_type li').click(function () {
     const url = $(this).attr('data-url');
     window.location.href = url;
 });
 
-$('#list_category li').click(function () {    
+$('#list_category li').click(function () {
     const url = $(this).attr('data-url');
     window.location.href = url;
+});
+
+$('#search').keypress(function (event) {
+    if (event.which === 13) {
+        Search($('#search').val());
+    }
+});
+
+$('#search_').keypress(function (event) {
+    if (event.which === 13) {
+        Search($('#search_').val());
+    }
 });
