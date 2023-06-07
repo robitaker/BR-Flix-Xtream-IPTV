@@ -34,6 +34,11 @@ $app->post('/login', [$routes, 'checkLogin']);
 $app->get('/movie/{id}', [$routes, 'detailMovie']);
 $app->get('/serie/{id}', [$routes, 'detailSerie']);
 
+//$app->get('/catalog', [$routes, 'Catalog']);
+$app->get('/catalog[/{type}/{genre}/{page}]', [$routes, 'Catalog']);
+
+
+
 
 $app->get('/watch/{type}/{id}/{extension}', [$routes, 'watchMovie']);
 

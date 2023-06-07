@@ -185,7 +185,8 @@ class Xtream
         function detailsSeasons($arr)
         {
 
-            function escapeConditions ($str) {
+            function escapeConditions($str)
+            {
                 $str = str_replace('"', "'", $str);
                 $str = str_replace("ç", "c", $str);
 
@@ -274,6 +275,61 @@ class Xtream
 
         return json_decode(json_encode($info));
     }
+
+
+    public function searchByCategory($type, $genre, $page, $max = 30)
+    {
+
+        function createArrPages($now, $max_pages)
+        {
+
+            $offset = $now - 1 > 1 ? $now - 1 : 1;
+            $limit = $now + 2 <= $max_pages ? $now + 2 : $max_pages;
+
+            $arr = [];
+            for (; $offset <= $limit; $offset++) {
+                $arr[$offset] = $offset;
+            }
+
+            return $arr;
+        }
+
+        $is_serie  = $type == 'series' ? true : false;
+        $category  = $type == 'series' ? 'series.json' : 'vods.json';
+        $get  = json_decode(file_get_contents($this->path . '/' . $category));
+
+        $arr = [];
+
+        foreach ($get as $ind => $row) {
+            if ($row->category_id == $genre) {
+                $arr[] = $row;
+            }
+        }
+
+        $results = $is_serie ? json_decode($this->organizerSeries($arr)) : json_decode($this->organizerVods($arr));
+        $qtd = count($results);
+
+        $max_pages = ceil($qtd / $max);
+        if ($page < 1) $page = 1;
+        else if ($page > $max_pages) $page = $max_pages;
+
+        $offset = $page * $max;
+        $offset = $page == 1 ? 0 : $offset - $max;
+
+        $results = $this->desc_asc_Movie(array_slice($results, $offset, $max));
+
+        return json_decode(json_encode([
+            'page' => $page,
+            'max_pages' => $max_pages,
+            'pages' => createArrPages($page, $max_pages),
+            'qtd' => count($results),
+            'genre' => $this->nameCategory($genre, $is_serie),
+            'data' => $results
+        ]));
+    }
+
+
+
 
 
     public function redirectMovie($type, $id, $extension)

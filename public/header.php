@@ -28,9 +28,9 @@
                             <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdownMenuCatalog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $language->header->films ?> <i class="icon ion-ios-arrow-down"></i></a>
 
                             <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuCatalog">
-                                <li><a href="catalog.html"><?= $language->header->view_all ?></a></li>
+                                <li><a href="/catalog/movies/0/1"><?= $language->header->view_all ?></a></li>
                                 <?php foreach ($category['vods'] as $row) { ?>
-                                    <li><a href="catalog.html"><?= $row->category_name ?></a></li>
+                                    <li><a href="/catalog/movies/<?=$row->category_id?>/1"><?= $row->category_name ?></a></li>
                                 <?php } ?>
 
                             </ul>
@@ -43,9 +43,9 @@
                             <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdownMenuCatalog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $language->header->series ?> <i class="icon ion-ios-arrow-down"></i></a>
 
                             <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuCatalog">
-                                <li><a href="catalog.html"><?= $language->header->view_all ?></a></li>
+                                <li><a href="/catalog/series/0/1"><?= $language->header->view_all ?></a></li>
                                 <?php foreach ($category['series'] as $row) { ?>
-                                    <li><a href="catalog.html"><?= $row->category_name ?></a></li>
+                                    <li><a href="/catalog/series/<?=$row->category_id?>/1"><?= $row->category_name ?></a></li>
                                 <?php } ?>
                             </ul>
                         </li>

@@ -83,3 +83,14 @@ function watchSerie(temp, ep_num) {
     scrollToPlayer();
 
 }
+
+
+$('#list_type li').click(function () {    
+    const url = $(this).attr('data-url');
+    window.location.href = url;
+});
+
+$('#list_category li').click(function () {    
+    const url = $(this).attr('data-url');
+    window.location.href = url;
+});

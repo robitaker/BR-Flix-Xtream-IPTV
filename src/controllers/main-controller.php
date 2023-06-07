@@ -61,7 +61,6 @@ class RoutesController
                 'now' => $now,
                 'opts' => $languages
             ];
-            
         } else {
 
             $languages = [
@@ -79,6 +78,9 @@ class RoutesController
 
     public function Index($req, $res, $args)
     {
+
+        //$this->xtream->generateJSON();
+
         $filters = $this->filters;
         $msg = $this->msg;
 
@@ -256,7 +258,8 @@ class RoutesController
     }
 
 
-    public function watchMovie ($req, $res, $args) {
+    public function watchMovie($req, $res, $args)
+    {
 
         $filters = $this->filters;
 
@@ -267,10 +270,58 @@ class RoutesController
         $redirect = $this->xtream->redirectMovie($type, $id, $extension);
 
         return $res->withHeader('Location', $redirect)->withStatus(302);
-
     }
 
-    public function pageError($req, $res, $args) {
+
+
+    public function Catalog($req, $res, $args)
+    {
+
+        $filters = $this->filters;
+
+        $category = $this->xtream->getAllCategory();
+
+        $type = isset($args['type']) && $args['type'] == 'series' ? 'series' : 'movies';
+        $arch = isset($args['type']) && $args['type'] == 'series' ? 'series' : 'vods';
+
+        $genre = isset($args['genre']) && $args['genre'] > 0 ? $filters->Num($args['genre']) : false;
+
+        if ($genre) {
+
+            $confirm = false;
+
+            foreach ($category[$arch] as $row) {
+                if ($row->category_id == $genre) {
+                    $confirm = true;
+                    break;
+                }
+            }
+
+            if (!$confirm) $genre = $category[$arch][0]->category_id;
+
+        } else $genre = $category[$arch][0]->category_id;
+
+        $page = isset($args['page']) && $args['page'] > 0 ? $filters->Num($args['page']) : 1;
+
+        $body = [
+
+            'profile' => $this->isLogged(),
+            'lang_opt' => $this->Language(true),
+            'language' => $this->Language(),
+            'category' => $category,
+            'args' => [$type, $genre, $arch],
+            'results' =>  $this->xtream->searchByCategory($arch, $genre, $page)
+        ];
+
+
+        return $this->renderer->render($res, "catalog.php", $body);
+    }
+
+
+
+
+    public function pageError($req, $res, $args)
+    {
         return $this->renderer->render($res, "404.php", []);
     }
 }

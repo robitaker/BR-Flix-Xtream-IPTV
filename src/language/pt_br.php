@@ -38,6 +38,15 @@ $translation =  [
         'seasons' => 'Temporadas',
         'episode' => 'Episódio'
 
+    ],
+
+    'catalog' => [
+
+        'catalog' => 'Catálogo',
+        'category' => 'Categoria',
+        'genre' => 'Gênero',
+        'series' => 'Séries',
+        'films' => 'Filmes'
     ]
 ];
 

@@ -5,7 +5,7 @@ $translation =  [
     'header' => [
 
         'home' => 'Home',
-        'films' => 'Films',
+        'films' => 'Movies',
         'series' => 'Series',
         'search' => 'Search...',
         'login' => 'Sign In',
@@ -37,6 +37,15 @@ $translation =  [
         'episode' => 'Episode'
 
 
+    ],
+
+    'catalog' => [
+
+        'catalog' => 'Catalog',
+        'category' => 'Category',
+        'genre' => 'Genre',
+        'series' => 'Series',
+        'films' => 'Movies'
     ]
 
 ];
