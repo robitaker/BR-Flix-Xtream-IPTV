@@ -19,7 +19,11 @@
 
         // Search
 
-        "caracteres_search" => "You need to provide a minimum of 2 characters or a maximum of 20 characters to search."
+        "caracteres_search" => "You need to provide a minimum of 2 characters or a maximum of 20 characters to search.",
+
+
+        // Profile
+        "not_logged" => "user is not logged in."
 
 
     ]), false);

@@ -123,3 +123,47 @@ $('#search_').keypress(function (event) {
         Search($('#search_').val());
     }
 });
+
+$('#add_list').on('click', function () {
+
+    const id = $('#add_list').attr('data-id');
+    const type = $('#add_list').attr('data-type');
+
+    console.log()
+
+    if (!is_added) {
+
+        $.ajax({
+            url: "/profile/add-list",
+            type: "POST",
+            data: { id, type },
+            success: function (res) {
+
+                $('#add_list').html(`<i class="icon ion-ios-close-circle icon"></i>${lang.remove_list}`);
+                is_added = true;
+
+            },
+            error: function (err) {
+
+            }
+        });
+
+    } else {
+        removeList(id, type);
+    }
+
+});
+
+
+function removeList(id, type) {
+
+    console.log(id, type);
+
+}
+
+
+$('#remove_list').on('click', function () {
+    const id = $('#remove_list').attr('data-id');
+    const type = $('#remove_list').attr('data-type');
+    removeList(id, type);
+});

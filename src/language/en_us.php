@@ -30,7 +30,10 @@ $translation =  [
         'release' => 'Release year',
         'time_min' => 'Running time',
         'country' => 'Country',
+
         'watch' => 'Watch',
+        'add_list' => 'Add to list',
+        'remove_list' => 'Remove from list',
 
         'season' => 'Season',
         'seasons' => 'Seasons',

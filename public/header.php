@@ -1,5 +1,6 @@
 <?php
 
+$url_now = base64_encode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
 
 ?>
@@ -114,7 +115,7 @@
                             </div>
 
                         <?php } else { ?>
-                            <a href="/login" class="header__sign-in">
+                            <a href="/login/<?=$url_now?>" class="header__sign-in">
                                 <i class="icon ion-ios-log-in"></i>
                                 <span>sign in</span>
                             </a>

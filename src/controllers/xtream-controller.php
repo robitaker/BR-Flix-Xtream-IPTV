@@ -335,9 +335,7 @@ class Xtream
 
         function compare($searching, $title)
         {
-            $pattern = '/' . $searching . '/';
-
-            if (preg_match($pattern, $title)) {
+            if (strpos($title, $searching) !== false) {
                 return true;
             } else {
                 return false;
@@ -369,7 +367,7 @@ class Xtream
         foreach ($tmp_results as $row) {
             $results[] = $row;
         }
-       
+
         $results = $this->desc_asc_Movie($results);
 
 
@@ -378,6 +376,25 @@ class Xtream
             'qtd' => count($results),
             'data' => $results
         ]));
+    }
+
+    public function searchByID($id, $is_serie)
+    {
+
+        $type = $is_serie ? 'series.json' : 'vods.json';
+        $get = json_decode(file_get_contents($this->path . '/' . $type));
+
+        $info = false;
+
+        foreach ($get as $row) {
+            $id_video  = $is_serie ? $row->series_id : $row->stream_id;
+            if ($id_video == $id) {
+                $info = $is_serie ? $this->organizerSeries([$row]) : $this->organizerVods([$row]);
+                break;
+            }
+        }
+
+        return $info;
     }
 
 

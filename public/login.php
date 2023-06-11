@@ -7,21 +7,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<!-- CSS -->
-	<link rel="stylesheet" href="assets/css/bootstrap-reboot.min.css">
-	<link rel="stylesheet" href="assets/css/bootstrap-grid.min.css">
-	<link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-	<link rel="stylesheet" href="assets/css/jquery.mCustomScrollbar.min.css">
-	<link rel="stylesheet" href="assets/css/nouislider.min.css">
-	<link rel="stylesheet" href="assets/css/ionicons.min.css">
-	<link rel="stylesheet" href="assets/css/magnific-popup.css">
-	<link rel="stylesheet" href="assets/css/plyr.css">
-	<link rel="stylesheet" href="assets/css/photoswipe.css">
-	<link rel="stylesheet" href="assets/css/default-skin.css">
-	<link rel="stylesheet" href="assets/css/main.css">
+	<link rel="stylesheet" href="/assets/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="/assets/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+	<link rel="stylesheet" href="/assets/css/jquery.mCustomScrollbar.min.css">
+	<link rel="stylesheet" href="/assets/css/nouislider.min.css">
+	<link rel="stylesheet" href="/assets/css/ionicons.min.css">
+	<link rel="stylesheet" href="/assets/css/magnific-popup.css">
+	<link rel="stylesheet" href="/assets/css/plyr.css">
+	<link rel="stylesheet" href="/assets/css/photoswipe.css">
+	<link rel="stylesheet" href="/assets/css/default-skin.css">
+	<link rel="stylesheet" href="/assets/css/main.css">
 
 	<!-- Favicons -->
-	<link rel="icon" type="image/png" href="assets/icon/favicon-32x32.png" sizes="32x32">
-	<link rel="apple-touch-icon" href="assets/icon/favicon-32x32.png">
+	<link rel="icon" type="image/png" href="/assets/icon/favicon-32x32.png" sizes="32x32">
+	<link rel="apple-touch-icon" href="/assets/icon/favicon-32x32.png">
 
 	<meta name="description" content="">
 	<meta name="keywords" content="">
@@ -31,7 +31,7 @@
 
 <body class="body">
 
-	<div class="sign section--bg" data-bg="assets/img/section/section.jpg">
+	<div class="sign section--bg" data-bg="/assets/img/section/section.jpg">
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
@@ -39,7 +39,7 @@
 						<!-- authorization form -->
 						<form action="/login" method="post" class="sign__form">
 							<a href="/" class="sign__logo">
-								<img src="assets/img/logo.svg" alt="">
+								<img src="/assets/img/logo.svg" alt="">
 							</a>
 
 							<span class="success_form"><?= $create ?? '' ?></span>
@@ -53,11 +53,11 @@
 								<input name="password" type="password" class="sign__input" placeholder="Password">
 							</div>
 
-		
+							<input name="redirect" type="hidden" value="<?=$redirect ?? ''?>">
 							
 							<button type="submit" class="sign__btn" type="button">Sign in</button>
 
-							<span class="sign__text">Don't have an account? <a href="/register">Sign up!</a></span>
+							<span class="sign__text">Don't have an account? <a href="/register<?=$redirect ? '/'.$redirect : ''?>">Sign up!</a></span>
 
 						</form>
 						<!-- end authorization form -->
@@ -68,18 +68,18 @@
 	</div>
 
 	<!-- JS -->
-	<script src="assets/js/jquery-3.5.1.min.js"></script>
-	<script src="assets/js/bootstrap.bundle.min.js"></script>
-	<script src="assets/js/owl.carousel.min.js"></script>
-	<script src="assets/js/jquery.magnific-popup.min.js"></script>
-	<script src="assets/js/jquery.mousewheel.min.js"></script>
-	<script src="assets/js/jquery.mCustomScrollbar.min.js"></script>
-	<script src="assets/js/wNumb.js"></script>
-	<script src="assets/js/nouislider.min.js"></script>
-	<script src="assets/js/plyr.min.js"></script>
-	<script src="assets/js/photoswipe.min.js"></script>
-	<script src="assets/js/photoswipe-ui-default.min.js"></script>
-	<script src="assets/js/main.js"></script>
+	<script src="/assets/js/jquery-3.5.1.min.js"></script>
+	<script src="/assets/js/bootstrap.bundle.min.js"></script>
+	<script src="/assets/js/owl.carousel.min.js"></script>
+	<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+	<script src="/assets/js/jquery.mousewheel.min.js"></script>
+	<script src="/assets/js/jquery.mCustomScrollbar.min.js"></script>
+	<script src="/assets/js/wNumb.js"></script>
+	<script src="/assets/js/nouislider.min.js"></script>
+	<script src="/assets/js/plyr.min.js"></script>
+	<script src="/assets/js/photoswipe.min.js"></script>
+	<script src="/assets/js/photoswipe-ui-default.min.js"></script>
+	<script src="/assets/js/main.js"></script>
 </body>
 
 <!-- Mirrored from hotflix.volkovdesign.com/main/signin.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 May 2023 18:20:26 GMT -->

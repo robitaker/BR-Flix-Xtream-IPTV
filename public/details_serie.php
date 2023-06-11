@@ -166,7 +166,7 @@
 		var seasons = {
 			term_lang: '<?= $language->details->episode ?>',
 			info: `<?= json_encode($details->seasons) ?>`
-		}
+		};
 	</script>
 
 

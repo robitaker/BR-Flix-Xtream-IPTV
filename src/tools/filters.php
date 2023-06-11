@@ -105,4 +105,30 @@ class Filters
 
         return true;
     }
+
+    public function isBase64($string) {
+        return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $string);
+    }
+
+    function scapeString($string) {
+
+        $palavrasChavePrejudiciais = [
+            'eval',
+            'exec',
+            'system',
+            'shell_exec',
+            'passthru',
+            'phpinfo',
+            'php',
+            'echo'
+        ];
+    
+        foreach ($palavrasChavePrejudiciais as $palavraChave) {
+            if (stripos($string, $palavraChave) !== false) {
+                $string = str_ireplace($palavraChave, '*', $string);
+            }
+        }
+
+        return $string;
+    }
 }

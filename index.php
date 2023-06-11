@@ -1,5 +1,9 @@
 <?php
+
+
 use Slim\Factory\AppFactory;
+use Slim\Routing\RouteCollectorProxy;
+
 
 if (isset($_COOKIE['PHPSESSID'])) {
     session_start();
@@ -19,18 +23,16 @@ $filters = new Filters();
 
 include './src/msg.php';
 include './src/controllers/main-controller.php';
+
 $routes = new RoutesController($dbInstance, $filters, $msg);
-
-
-
 
 
 $app->get('/', [$routes, 'Index']);
 
-$app->get('/register', [$routes, 'Register']);
+$app->get('/register[/{redirect}]', [$routes, 'Register']);
 $app->post('/register', [$routes, 'confirmRegister']);
 
-$app->get('/login', [$routes, 'Login']);
+$app->get('/login[/{redirect}]', [$routes, 'Login']);
 $app->post('/login', [$routes, 'checkLogin']);
 
 $app->get('/movie/{id}', [$routes, 'detailMovie']);
@@ -40,6 +42,18 @@ $app->get('/catalog[/{type}/{genre}/{page}]', [$routes, 'Catalog']);
 $app->get('/search/{search:.+}', [$routes, 'Search']);
 
 $app->get('/watch/{type}/{id}/{extension}', [$routes, 'watchMovie']);
+
+
+
+$app->group('/profile', function (RouteCollectorProxy $group) use ($routes) {
+
+    $group->post('/add-list', [$routes, 'addList']);
+
+});
+
+
+
+
 
 
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', [$routes, 'pageError']);

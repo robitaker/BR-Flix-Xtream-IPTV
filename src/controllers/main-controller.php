@@ -75,6 +75,18 @@ class RoutesController
         return json_decode(json_encode($translation));
     }
 
+    private function detectRedirect($base64, $encode = true)
+    {
+        if ($this->filters->isBase64($base64) && $base64 != '/') {
+
+            $clear = $this->filters->Xss(base64_decode($base64));
+            $clear =  $this->filters->alNum($clear, ' \/\!?@,:._-');
+            $clear = $this->filters->scapeString($clear);
+
+            return $encode ? base64_encode($clear) : $clear;
+        } else return false;
+    }
+
 
     public function Index($req, $res, $args)
     {
@@ -113,10 +125,15 @@ class RoutesController
 
     public function Login($req, $res, $args)
     {
+        $filters = $this->filters;
         $msg = $this->msg;
 
+        $redirect = $this->detectRedirect($args['redirect'] ?? '/');
+
+
         $body = [
-            'create' => false
+            'create' => false,
+            'redirect' => $redirect
         ];
 
         if (isset($_COOKIE['register_user'])) {
@@ -124,14 +141,16 @@ class RoutesController
             setcookie('register_user', false, -1);
         }
 
-
         return $this->renderer->render($res, "login.php", $body);
     }
 
     public function Register($req, $res, $args)
     {
-        $renderer = new PhpRenderer('public');
-        return $renderer->render($res, "register.php", ['teste' => 'aa']);
+
+        $redirect = $this->detectRedirect($args['redirect'] ?? '/');
+        $body = ['redirect' => $redirect];
+
+        return $this->renderer->render($res, "register.php", $body);
     }
 
     public function confirmRegister($req, $res, $args)
@@ -145,9 +164,12 @@ class RoutesController
         $username = $filters->Xss($params['username']);
         $password = $filters->Xss($params['password']);
 
+        $redirect = $this->detectRedirect($params['redirect'] ?? '/');
+
         $body = [
             'error' => false,
-            'success' => false
+            'success' => false,
+            'redirect' => $redirect
         ];
 
         if (strlen($name) > 60) {
@@ -164,6 +186,7 @@ class RoutesController
             return $this->renderer->render($res, "register.php", $body);
         }
 
+
         $uuid = $filters->generateUUID();
 
         $add = $this->crud->addUser($name, $email, $username, $password, $uuid);
@@ -171,8 +194,8 @@ class RoutesController
         if ($add == 1) {
 
             setcookie("register_user", $msg->create_account, time() + 3600);
-            header('Location: /login');
-            exit();
+            return $res->withHeader('Location', '/login'.($redirect ? '/' . $redirect : ''))->withStatus(302);
+            
         } elseif ($add == 3) {
             $body['error'] = $msg->user_already_exists;
             return $this->renderer->render($res, "register.php", $body);
@@ -193,18 +216,22 @@ class RoutesController
         $username = $filters->Xss($params['username']);
         $password = $filters->Xss($params['password']);
 
+
+        $redirect_ = $this->detectRedirect($params['redirect'] ?? '/', false);
+        $redirect = $redirect_ ? $redirect_ : '/';
+
         $body = [
-            'error' => false
+            'error' => false,
+            'redirect' => base64_encode($redirect_)
         ];
 
         $check = $this->crud->checkLogin($username, $password);
 
-        if ($check) {
 
+        if ($check) {
             session_start();
             $_SESSION['token'] = $check;
-            header('Location: /');
-            exit();
+            return $res->withHeader('Location', $redirect)->withStatus(302);
         } else {
             $body['error'] = $msg->pass_user_invalid;
             return $this->renderer->render($res, "login.php", $body);
@@ -219,20 +246,29 @@ class RoutesController
     public function detailMovie($req, $res, $args)
     {
         $filters = $this->filters;
-        $msg = $this->msg;
 
         $id = $filters->Num($args['id']);
         $details = $this->xtream->getDetailMovie($id);
 
+        $profile = $this->isLogged();
+        $info_db = false;
+
+        if ($profile) {
+            $info_db = $this->crud->getDetailsVideo($id, 'movie', $profile['id']);
+            $info_db = $info_db[0] ?? false;
+        }
+
+        print_r($info_db);
+
 
         $body = [
-            'profile' => $this->isLogged(),
+            'profile' => $profile,
             'lang_opt' => $this->Language(true),
             'language' => $this->Language(),
             'category' => $this->xtream->getAllCategory(),
+            'info_db' => json_decode(json_encode($info_db)),
             'details' => $details
         ];
-
 
         return $this->renderer->render($res, "details_vod.php", $body);
     }
@@ -299,7 +335,6 @@ class RoutesController
             }
 
             if (!$confirm) $genre = $category[$arch][0]->category_id;
-
         } else $genre = $category[$arch][0]->category_id;
 
         $page = isset($args['page']) && $args['page'] > 0 ? $filters->Num($args['page']) : 1;
@@ -325,10 +360,11 @@ class RoutesController
         $msg = false;
 
         $term = $filters->termSearch($filters->AlNum($args['search'], ' !?@,:._-'));
+        $term = $filters->Xss($term);
+        $term = $filters->scapeString($term);
 
         if (strlen($term) > 2 && strlen($term) < 20) {
-            $results = $this->xtream->searchByTerm($filters->Xss($term), $filters);
-
+            $results = $this->xtream->searchByTerm($term, $filters);
         } else {
             $msg = $this->msg->caracteres_search;
             $results = json_decode(json_encode([
@@ -350,6 +386,41 @@ class RoutesController
         return $this->renderer->render($res, "search.php", $body);
     }
 
+    public function addList($req, $res, $args)
+    {
+        $filters = $this->filters;
+
+        $data = false;
+        $code = 400;
+
+        $profile = $this->isLogged();
+
+        if (!$profile) {
+            $data = ["error" => $this->msg->not_logged];
+        } else {
+
+            $params = $req->getParsedBody();
+
+            $id = $filters->Num($params['id']);
+            $type = isset($params['type']) && $params['type'] == 'series' ? 'series' : 'movies';
+            $is_serie = $type == 'series' ? true : false;
+
+            $info = $this->xtream->searchByID($id, $is_serie);
+            if ($info) {
+                $add = $this->crud->addList(json_decode($info)[0], $profile['id']);
+                
+                if ($add) {
+                    $data = true;
+                    $code = 200;
+                }
+         
+            }
+        }
+
+
+        $res->getBody()->write(json_encode($data));
+        return $res->withStatus($code);
+    }
 
 
 

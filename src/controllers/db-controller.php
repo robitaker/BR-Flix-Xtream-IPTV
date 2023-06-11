@@ -59,26 +59,85 @@ class CRUD
 
         try {
 
-            $sql = "SELECT 
-
-             id_user id,
-             login,
-             name, 
-             email,
-             rank
-            
-             FROM users WHERE uuid = ?";
+            $sql = "SELECT id_user AS id, login, name, email, level FROM  users WHERE uuid = ?;";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($data);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($results) $profile = $results[0];
-            
         } catch (PDOException $e) {
         }
 
         return $profile;
+    }
+
+
+    public function addList($info, $id_profile)
+    {
+
+        $data = [
+            $id_profile, 
+            $info->id, 
+            $info->type, 
+            $info->name, 
+            $info->img,
+
+            $info->id,
+            $id_profile
+        ];
+
+        $status = false;
+
+        try {
+
+            $sql = "INSERT INTO favorites (id_user, id_video, type, name, img)
+            SELECT ?, ?, ?, ?, ?
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM favorites
+                WHERE id_video = ? AND id_user = ?
+                LIMIT 1
+            );";
+
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+
+            $status = $stmt->rowCount() > 0 ? true : false;
+
+        } catch (PDOException $e) {
+            print_r($e);
+        }
+
+        return $status;
+    }
+
+
+    public function getDetailsVideo($id, $type, $id_profile)
+    {
+
+        $data = [
+            $id_profile,
+            $id, 
+            $type
+        ];
+
+        $results = false;
+
+        try {
+
+            $sql = "SELECT (SELECT COUNT(id) FROM favorites WHERE id_user = ? AND id_video = ? AND type = ?) AS favorite";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        } catch (PDOException $e) {
+            
+        }
+
+        return $results;
     }
 
 
@@ -104,9 +163,6 @@ class CRUD
 
 
 
-
-
-    
     public function getXsteamConfig()
     {
 
@@ -120,7 +176,6 @@ class CRUD
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($results) $info = $results[0];
-            
         } catch (PDOException $e) {
         }
 

@@ -55,6 +55,12 @@
 									<span class="card__rate card__rate--green"><?=$details->rating?></span>
 								</div>
 								<a href="#" data-url="/watch/<?=$details->type?>/<?=$details->id?>/<?=$details->extension?>" id="watch_movie" class="card__trailer"><i class="icon ion-ios-play-circle"></i><?=$language->details->watch?></a>
+								
+								<?php if ($info_db && $info_db->favorite == 0) {?>
+									<a href="#" data-id="<?=$details->id?>" data-type="<?=$details->type?>" id="add_list" class="card__trailer"><i  class="icon ion-ios-add-circle"></i><?=$language->details->add_list?></a>
+								<?php } else if ($info_db && $info_db->favorite > 0) {?>
+									<a href="#" data-id="<?=$details->id?>" data-type="<?=$details->type?>" id="remove_list" class="card__trailer"><i  class="icon ion-ios-close-circle icon"></i><?=$language->details->remove_list?></a>
+								<?php } ?>
 							</div>
 							<!-- end card cover -->
 
@@ -92,6 +98,15 @@
 	</section>
 	<!-- end details -->
 
+	 <script>
+		var lang = {
+			add_list : "<?=$language->details->add_list?>",
+			remove_list : "<?=$language->details->remove_list?>"
+		};
+
+		var is_added = false;
+		
+	 </script>
 
 
 	<?php include 'public/footer.php' ?>
