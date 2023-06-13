@@ -1,3 +1,21 @@
+<?php
+	$watched = isset($info_db->watched) ? json_decode($info_db->watched) : false;
+
+	function detectAlreadyWatched($arr, $id) {
+		$status = false;
+		foreach ($arr as $row) {
+			if ($row->ep == $id) {
+				
+				$status = true;
+				break;
+			}
+		}
+
+		return $status;
+	}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -55,7 +73,12 @@
 									<img id="img_serie" src="<?= $details->img ?>" alt="">
 									<span class="card__rate card__rate--green"><?= $details->rating ?></span>
 								</div>
-								<a href="#" data-url="/watch/<?= $details->type ?>/<?= $details->id ?>/<?= $details->extension ?>" id="watch_movie" class="card__trailer"><i class="icon ion-ios-play-circle"></i><?= $language->details->watch ?></a>
+
+								<?php if (!isset($info_db->favorite)) {?>
+									<a href="#" data-id="<?= $details->id ?>" data-type="<?= $details->type ?>" id="add_list" class="card__trailer"><i class="icon ion-ios-add-circle"></i><?= $language->details->add_list ?></a>
+									<?php } else if (isset($info_db->favorite)) {?>
+									<a href="#" data-id="<?= $details->id ?>" data-type="<?= $details->type ?>" id="remove_list" class="card__trailer"><i class="icon ion-ios-close-circle icon"></i><?= $language->details->remove_list ?></a>
+								<?php } ?>
 							</div>
 							<!-- end card cover -->
 
@@ -140,12 +163,14 @@
 						<div class="card">
 							<div class="card__cover">
 								<img src="<?= $row->img ?>" alt="">
-								<a onclick="watchSerie(0, <?=$ind?>)" href="#" class="card__play">
+								<a onclick="watchSerie(0, <?= $ind ?>)" href="#" class="card__play">
 									<i class="icon ion-ios-play"></i>
 								</a>
 							</div>
 							<div class="card__content">
-								<h3 class="card__title"><a id="name_ep_<?=$ind?>" href="#"><?= $row->name ?></a></h3>
+								<h3 class="card__title">
+									<a  <?= detectAlreadyWatched($watched, $row->id) ? 'style="color:#4bc658"' : '' ?> id="name_ep_<?= $ind ?>" href="#"><?= $row->name ?></a>
+								</h3>
 								<span class="card__category">
 									<a href="#"><?= $language->details->episode . ' ' . $ind + 1 ?></a>
 								</span>
@@ -167,7 +192,27 @@
 			term_lang: '<?= $language->details->episode ?>',
 			info: `<?= json_encode($details->seasons) ?>`
 		};
+
+		var lang = {
+			add_list: "<?= $language->details->add_list ?>",
+			remove_list: "<?= $language->details->remove_list ?>"
+		};
+
+		var list_watched = '<?=$watched ? json_encode($watched) : false?>';
+		var info_player = {
+
+			id: '<?= $details->id ?>',
+			type: '<?= $details->type ?>'
+
+		};
+
+		var is_added = false;
+		const is_serie = true;
+
+
 	</script>
+
+
 
 
 	<?php include 'public/footer.php' ?>

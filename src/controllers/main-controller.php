@@ -87,6 +87,33 @@ class RoutesController
         } else return false;
     }
 
+    private function checkCache($id, $type, $is_serie)
+    {
+        $id_cache = false;
+        $info_cache = $this->crud->getIDCache($id, $type);
+
+        if ($info_cache) {
+
+            $id_cache = $info_cache['id'];
+            $info_video = json_encode([
+                [
+                    'id' => $id,
+                    'type' => $type
+                ]
+            ]);
+        } else {
+
+            $info_video = $this->xtream->searchByID($id, $is_serie);
+
+            if ($info_video) {
+                $id_cache = $this->crud->addCache(json_decode($info_video)[0]);
+            }
+        }
+
+
+        return [$id_cache, $info_video];
+    }
+
 
     public function Index($req, $res, $args)
     {
@@ -194,8 +221,7 @@ class RoutesController
         if ($add == 1) {
 
             setcookie("register_user", $msg->create_account, time() + 3600);
-            return $res->withHeader('Location', '/login'.($redirect ? '/' . $redirect : ''))->withStatus(302);
-            
+            return $res->withHeader('Location', '/login' . ($redirect ? '/' . $redirect : ''))->withStatus(302);
         } elseif ($add == 3) {
             $body['error'] = $msg->user_already_exists;
             return $this->renderer->render($res, "register.php", $body);
@@ -258,7 +284,35 @@ class RoutesController
             $info_db = $info_db[0] ?? false;
         }
 
-        print_r($info_db);
+
+        $body = [
+            'profile' => $profile,
+            'lang_opt' => $this->Language(true),
+            'language' => $this->Language(),
+            'category' => $this->xtream->getAllCategory(),
+            'info_db' => json_decode(json_encode($info_db)),
+            'details' => $details
+        ];
+
+
+        return $this->renderer->render($res, "details_vod.php", $body);
+    }
+
+
+    public function detailSerie($req, $res, $args)
+    {
+        $filters = $this->filters;
+
+        $id = $filters->Num($args['id']);
+        $details = $this->xtream->getDetailMovie($id, true);
+
+        $profile = $this->isLogged();
+        $info_db = false;
+
+        if ($profile) {
+            $info_db = $this->crud->getDetailsVideo($id, 'serie', $profile['id']);
+            $info_db = $info_db[0] ?? false;
+        }
 
 
         $body = [
@@ -270,26 +324,6 @@ class RoutesController
             'details' => $details
         ];
 
-        return $this->renderer->render($res, "details_vod.php", $body);
-    }
-
-
-    public function detailSerie($req, $res, $args)
-    {
-        $filters = $this->filters;
-        $msg = $this->msg;
-
-        $id = $filters->Num($args['id']);
-        $details = $this->xtream->getDetailMovie($id, true);
-
-
-        $body = [
-            'profile' => $this->isLogged(),
-            'lang_opt' => $this->Language(true),
-            'language' => $this->Language(),
-            'category' => $this->xtream->getAllCategory(),
-            'details' => $details
-        ];
 
         return $this->renderer->render($res, "details_serie.php", $body);
     }
@@ -402,18 +436,52 @@ class RoutesController
             $params = $req->getParsedBody();
 
             $id = $filters->Num($params['id']);
-            $type = isset($params['type']) && $params['type'] == 'series' ? 'series' : 'movies';
-            $is_serie = $type == 'series' ? true : false;
+            $type = isset($params['type']) && $params['type'] == 'serie' ? 'serie' : 'movie';
+            $is_serie = $type == 'serie' ? true : false;
 
-            $info = $this->xtream->searchByID($id, $is_serie);
-            if ($info) {
-                $add = $this->crud->addList(json_decode($info)[0], $profile['id']);
-                
-                if ($add) {
+            $check_cache = $this->checkCache($id, $type, $is_serie);
+            $id_cache = $check_cache[0];
+            $info_video = $check_cache[1];
+
+
+            if ($id_cache) {
+                $add_list = $this->crud->addList(json_decode($info_video)[0], $profile['id']);
+
+                if ($add_list) {
                     $data = true;
                     $code = 200;
                 }
-         
+            }
+        }
+
+
+        $res->getBody()->write(json_encode($data));
+        return $res->withStatus($code);
+    }
+
+    public function removeList($req, $res, $args)
+    {
+        $filters = $this->filters;
+
+        $data = false;
+        $code = 400;
+
+        $profile = $this->isLogged();
+
+        if (!$profile) {
+            $data = ["error" => $this->msg->not_logged];
+        } else {
+
+            $params = $req->getParsedBody();
+
+            $id = $filters->Num($params['id']);
+            $type = isset($params['type']) && $params['type'] == 'serie' ? 'serie' : 'movie';
+
+            $remove = $this->crud->removeList($id, $type, $profile['id']);
+
+            if ($remove) {
+                $data = true;
+                $code = 200;
             }
         }
 
@@ -423,6 +491,75 @@ class RoutesController
     }
 
 
+    public function addWatched($req, $res, $args)
+    {
+        $filters = $this->filters;
+
+        $data = false;
+        $code = 400;
+
+        $profile = $this->isLogged();
+
+        if (!$profile) {
+            $data = ["error" => $this->msg->not_logged];
+        } else {
+
+            $params = $req->getParsedBody();
+
+            $id = $filters->Num($params['id']);
+            $type = isset($params['type']) && $params['type'] == 'serie' ? 'serie' : 'movie';
+            $id_ep = isset($params['id_ep']) ? $filters->Num($params['id_ep']) : null;
+
+            $is_serie = $type == 'serie' ? true : false;
+
+            $check_cache = $this->checkCache($id, $type, $is_serie);
+            $id_cache = $check_cache[0];
+            $info_video = $check_cache[1];
+
+            
+            if ($id_cache) {
+                $add_watched = $this->crud->addWatch($profile['id'], $id, $id_ep, $type);
+
+                if ($add_watched) {
+                    $data = ['id' => $add_watched];
+                    $code = 200;
+                }
+            }
+        }
+
+
+        $res->getBody()->write(json_encode($data));
+        return $res->withStatus($code);
+    }
+
+
+    public function updateCheckpoint($req, $res, $args)
+    {
+        $filters = $this->filters;
+
+        $data = false;
+        $code = 200;
+
+        $profile = $this->isLogged();
+
+        if (!$profile) {
+            $data = ["error" => $this->msg->not_logged];
+        } else {
+
+            $params = $req->getParsedBody();
+
+            $id = $filters->Num($params['id']);
+            $checkpoint = $filters->Num($params['checkpoint'], '.');
+    
+            $update = $this->crud->setCheckpoint($profile['id'], $id, $checkpoint);
+            print_r($update);
+
+        }
+
+
+        $res->getBody()->write(json_encode($data));
+        return $res->withStatus($code);
+    }
 
 
     public function pageError($req, $res, $args)

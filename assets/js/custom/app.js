@@ -45,8 +45,9 @@ function urlencode(str) {
 
 $('#watch_movie').on('click', function () {
     var url = $('#watch_movie').attr('data-url');
-    $('#player').attr('src', url);
+    $('#player').attr('src', `/watch/${info_player.type}/${info_player.id}/${info_player.extension}`);
     $('#watch_player').attr('hidden', false);
+    $('#player')[0].play();
 });
 
 $('#list_seasons li').click(function () {
@@ -57,6 +58,9 @@ $('#list_seasons li').click(function () {
     $('#show_ep').html('');
 
     data_season[dataInd].forEach((data, ind) => {
+        
+        const color = searchAlreadyWatched(data.id) ? '#4bc658' : '#fff';
+
         $('#show_ep').append(`
             <!-- card -->
             <div class="col-6 col-sm-4 col-md-3 col-xl-2">
@@ -68,7 +72,7 @@ $('#list_seasons li').click(function () {
                         </a>
                     </div>
                     <div class="card__content">
-                        <h3 class="card__title"><a href="details.html">${data.name}</a></h3>
+                        <h3 class="card__title"><a style="color:${color}" href="#">${data.name}</a></h3>
                         <span class="card__category">
                             <a href="#">${seasons.term_lang} ${ind + 1}</a>
                         </span>
@@ -81,17 +85,57 @@ $('#list_seasons li').click(function () {
 
 });
 
+
+function searchAlreadyWatched(id) {
+
+    if (list_watched == '') return false;
+
+    const js = JSON.parse(list_watched);
+    var info = false;
+    
+    for (const row of js) {
+       if (id == row.ep) {
+        info = row;
+        break;
+       }
+    }
+
+    return info;
+
+}
+
+
+
 function watchSerie(temp, ep_num) {
 
     var data_season = JSON.parse(fixJSON(seasons.info));
     var ep = data_season[temp][ep_num];
+
+    info_watch = searchAlreadyWatched(ep.id);
+
+    if (info_watch) {
+
+        info_player.id_watched = info_watch.id,
+        info_player.already_watched = true;
+        info_player.current_time = info_watch.checkpoint;
+
+    } else {
+
+        info_player.id_ep = ep.id;
+        info_player.already_watched = false;
+        info_player.current_time = 0;
+
+    }
+
 
     $('#player').attr('src', `/watch/series/${ep.id}/${ep.extension}`);
     $('#title_serie').text(ep.name);
     $('#img_serie').attr('src', ep.img);
     $('#name_ep_' + ep_num).css('color', '#4bc658');
     $('#watch_player').attr('hidden', false);
+    $('#player')[0].play();
     scrollToPlayer();
+    
 
 }
 
@@ -124,12 +168,23 @@ $('#search_').keypress(function (event) {
     }
 });
 
+
+// ADD & Remove list BTN
+
+
+
+function toggleToAdd(id) {
+    $('#' + id).html(`<i class="icon ion-ios-add-circle"></i>${lang.add_list}`);
+}
+
+function toggleToRemove(id) {
+    $('#' + id).html(`<i class="icon ion-ios-close-circle icon"></i>${lang.remove_list}`);
+}
+
 $('#add_list').on('click', function () {
 
     const id = $('#add_list').attr('data-id');
     const type = $('#add_list').attr('data-type');
-
-    console.log()
 
     if (!is_added) {
 
@@ -139,12 +194,13 @@ $('#add_list').on('click', function () {
             data: { id, type },
             success: function (res) {
 
-                $('#add_list').html(`<i class="icon ion-ios-close-circle icon"></i>${lang.remove_list}`);
+                console.log(res);
+                toggleToRemove('add_list');
                 is_added = true;
 
             },
             error: function (err) {
-
+                toggleToAdd('add_list');
             }
         });
 
@@ -157,7 +213,24 @@ $('#add_list').on('click', function () {
 
 function removeList(id, type) {
 
-    console.log(id, type);
+
+    const id_tag = is_added ? 'add_list' : 'remove_list';
+
+    $.ajax({
+        url: "/profile/remove-list",
+        type: "DELETE",
+        data: { id, type },
+        success: function (res) {
+
+            toggleToAdd(id_tag);
+            is_added = false;
+
+        },
+        error: function (err) {
+            toggleToRemove(id_tag);
+        }
+    });
+
 
 }
 
@@ -167,3 +240,81 @@ $('#remove_list').on('click', function () {
     const type = $('#remove_list').attr('data-type');
     removeList(id, type);
 });
+
+
+async function addWatched() {
+
+    var put = { id: info_player.id, type: info_player.type };
+    if (is_serie) put.id_ep = info_player.id_ep;
+
+    console.log(put)
+
+
+    $.ajax({
+        url: "/profile/add-watched",
+        type: "POST",
+        data: put,
+        success: function (res) {
+
+            info_player.already_watched = true;
+            info_player.id_watched = JSON.parse(res).id;
+            console.log(res);
+        },
+        error: function (err) {
+            console.log(err.responseText);
+        }
+    });
+}
+
+async function setCheckpoint(checkpoint) {
+    $.ajax({
+        url: "/profile/checkpoint-watched",
+        type: "PUT",
+        data: {id: info_player.id_watched, checkpoint},
+        success: function (res) {
+
+        },
+        error: function (err) {
+            
+        }
+    });
+}
+
+$('#watch_player').ready(function () {
+
+    var first_play = false;
+    var lastCheckPoint = 0;
+    var previousTime = 0;
+
+    $('#player').on('loadeddata', () => {
+       if (info_player.already_watched) {
+            $('#player')[0].currentTime = info_player.current_time;
+       }
+    });
+
+    $('#player').on('play', async function () {
+
+        if (!info_player.already_watched) {
+            if (is_logged) await addWatched();
+            first_play = true;
+        }
+    });
+
+    
+
+    $('#player').on('timeupdate', async function () {
+        
+        var timeNow = this.currentTime;
+
+        if (timeNow < lastCheckPoint) {
+            lastCheckPoint = timeNow;
+
+        } else if (timeNow - lastCheckPoint >= 10) {
+            if (is_logged) await setCheckpoint(timeNow);
+            lastCheckPoint = timeNow;
+        }
+    });
+
+});
+
+

@@ -32,7 +32,10 @@ $translation =  [
         'release' => 'Ano de lançamento',
         'time_min' => 'Tempo de filme',
         'country' => 'País',
+
         'watch' => 'Assistir',
+        'add_list' => 'Adicionar á lista',
+        'remove_list' => 'Remover da lista',
 
         'season' => 'Temporada',
         'seasons' => 'Temporadas',

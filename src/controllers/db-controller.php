@@ -73,33 +73,110 @@ class CRUD
     }
 
 
+    public function getIDCache($id, $type)
+    {
+
+        $data = [$id, $type];
+
+        $info = false;
+
+        try {
+
+            $sql = "SELECT id FROM cache_info WHERE id_video = ? AND type = ? LIMIT 1;";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($results) $info = $results[0];
+
+        } catch (PDOException $e) {
+            print_r($e);
+        }
+
+        return $info;
+    }
+
+    public function addCache($info)
+    {
+
+        $data = [
+            $info->id, 
+            $info->type, 
+            $info->name, 
+            $info->img,
+
+            $info->id, 
+            $info->type
+        ];
+
+        $last_id = false;
+
+        try {
+
+            $sql = "INSERT INTO cache_info (id_video, type, name, img)
+            SELECT ?, ?, ?, ?
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM cache_info
+                WHERE id_video = ? AND type = ?
+                LIMIT 1
+            );";
+
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+
+            if ($stmt->rowCount() > 0 ) {
+                $last_id = $this->pdo->lastInsertId();
+            }
+
+        } catch (PDOException $e) {
+            print_r($e);
+        }
+
+        return $last_id;
+    }
+
+
     public function addList($info, $id_profile)
     {
 
         $data = [
             $id_profile, 
             $info->id, 
-            $info->type, 
-            $info->name, 
-            $info->img,
-
-            $info->id,
-            $id_profile
+            $info->type
         ];
 
         $status = false;
 
         try {
 
-            $sql = "INSERT INTO favorites (id_user, id_video, type, name, img)
-            SELECT ?, ?, ?, ?, ?
-            WHERE NOT EXISTS (
-                SELECT 1
-                FROM favorites
-                WHERE id_video = ? AND id_user = ?
-                LIMIT 1
-            );";
+            $sql = "INSERT IGNORE INTO favorites (id_user, id_video, type) VALUES (?, ?, ?)";
 
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+
+            $status = $stmt->rowCount() > 0 ? true : false;
+
+        } catch (PDOException $e) {
+            print_r($e);
+        }
+
+        return $status;
+    }
+
+
+
+    public function removeList($id, $type, $id_profile)
+    {
+
+        $data = [$id_profile, $id, $type];
+
+        $status = false;
+
+        try {
+
+            $sql = "DELETE FROM favorites WHERE id_user = ? AND id_video = ? AND type = ? LIMIT 1;";
             
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($data);
@@ -120,21 +197,44 @@ class CRUD
         $data = [
             $id_profile,
             $id, 
-            $type
+            $type,
+
+            $id_profile,
+            $id
         ];
 
         $results = false;
 
         try {
 
-            $sql = "SELECT (SELECT COUNT(id) FROM favorites WHERE id_user = ? AND id_video = ? AND type = ?) AS favorite";
+            $sql = "SELECT 
+            (SELECT cache_info.id AS favorite
+             FROM favorites
+             JOIN cache_info ON favorites.id_video = cache_info.id_video AND favorites.type = cache_info.type
+             WHERE favorites.id_user = ? 
+               AND favorites.id_video = ? 
+               AND favorites.type = ?
+
+            ) AS favorite ,
+
+            (
+            SELECT JSON_ARRAYAGG(JSON_OBJECT('id', id, 'ep', id_ep, 'type', type, 'checkpoint', checkpoint))
+            FROM watched
+            WHERE id_user = ? AND id_video = ?
+            
+            ) AS watched;";
+
+
+
+ 
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($data);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+            print_r($results);
 
         } catch (PDOException $e) {
-            
+            print_r($e->getMessage());
         }
 
         return $results;
@@ -144,9 +244,77 @@ class CRUD
 
 
 
+    public function addWatch($profile, $id, $id_ep, $type)
+    {
+
+        $data = [
+            $profile, 
+            $id,
+            $id_ep,
+            $type,
+
+            $profile, 
+            $id,
+            $id_ep,
+            $type
+        ];
+
+        $last_id = false;
+
+        try {
+
+            $sql = "INSERT INTO watched (id_user, id_video, id_ep, type)
+            SELECT ?, ?, ?, ?
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM watched
+                WHERE id_user = ? AND id_video = ? AND id_ep = ? AND type = ?
+                LIMIT 1
+            );";
+
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+
+            if ($stmt->rowCount() > 0 ) {
+                $last_id = $this->pdo->lastInsertId();
+            }
+
+        } catch (PDOException $e) {
+            print_r($e);
+        }
+
+        return $last_id;
+    }
 
 
 
+    public function setCheckpoint($profile, $id, $checkpoint)
+    {
+
+        $data = [
+            $checkpoint,
+            $id,
+            $profile
+        ];
+
+        $status = false;
+
+        try {
+
+            $sql = "UPDATE watched SET checkpoint = ? WHERE id = ? AND id_user = ?;";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+
+            $status = $stmt->rowCount() > 0 ? true : false;
+
+        } catch (PDOException $e) {
+            print_r($e);
+        }
+
+        return $status;
+    }
 
 
 
