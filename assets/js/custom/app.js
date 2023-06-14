@@ -296,7 +296,6 @@ async function setCheckpoint(checkpoint) {
 }
 
 function nextEpisode() {
-    console.log('caiu aqui');
     is_next_ep = true;
 
     var data_season = JSON.parse(fixJSON(seasons.info));
@@ -332,8 +331,10 @@ $('#watch_player').ready(function () {
     var duration = 0;
 
     $('#player').on('loadeddata', () => {
+
+       duration = $('#player')[0].duration;
+
        if (info_player.already_watched) {
-            duration = $('#player')[0].duration;
             $('#player')[0].currentTime = info_player.current_time;
        }
     });
