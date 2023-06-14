@@ -538,7 +538,7 @@ class RoutesController
         $filters = $this->filters;
 
         $data = false;
-        $code = 200;
+        $code = 400;
 
         $profile = $this->isLogged();
 
@@ -552,7 +552,11 @@ class RoutesController
             $checkpoint = $filters->Num($params['checkpoint'], '.');
     
             $update = $this->crud->setCheckpoint($profile['id'], $id, $checkpoint);
-            print_r($update);
+            
+            if ($update) {
+                $data = true;
+                $code = 200;
+            }
 
         }
 

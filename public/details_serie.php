@@ -2,6 +2,8 @@
 	$watched = isset($info_db->watched) ? json_decode($info_db->watched) : false;
 
 	function detectAlreadyWatched($arr, $id) {
+		if (!$arr) return false;
+
 		$status = false;
 		foreach ($arr as $row) {
 			if ($row->ep == $id) {
@@ -92,7 +94,7 @@
 										<li><span><?= $language->details->release ?>:</span> <?= $details->date ?></li>
 										<li><span><?= $language->details->seasons ?>:</span> <?= $details->qtd_seasons ?></li>
 									</ul>
-									<div class="card__description"><?= $details->description ?></div>
+									<div id="plot" class="card__description"><?= $details->description ?></div>
 								</div>
 							</div>
 							<!-- end card content -->
@@ -208,6 +210,7 @@
 
 		var is_added = false;
 		const is_serie = true;
+		const is_logged = <?=$profile ? 1 : 0?>;
 
 
 	</script>

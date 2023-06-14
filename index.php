@@ -51,7 +51,7 @@ $app->group('/profile', function (RouteCollectorProxy $group) use ($routes) {
     $group->delete('/remove-list', [$routes, 'removeList']);
 
     $group->post('/add-watched', [$routes, 'addWatched']);
-    $group->put('/checkpoint-watched', [$routes, 'updateCheckpoint']);
+    $group->post('/checkpoint-watched', [$routes, 'updateCheckpoint']);
 
 
 });

@@ -231,8 +231,6 @@ class CRUD
             $stmt->execute($data);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            print_r($results);
-
         } catch (PDOException $e) {
             print_r($e->getMessage());
         }

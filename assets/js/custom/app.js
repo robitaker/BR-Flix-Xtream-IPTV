@@ -1,5 +1,6 @@
 
 
+
 function setCookie(name, value, days) {
     var expires = "";
     if (days) {
@@ -48,15 +49,14 @@ $('#watch_movie').on('click', function () {
     $('#player').attr('src', `/watch/${info_player.type}/${info_player.id}/${info_player.extension}`);
     $('#watch_player').attr('hidden', false);
     $('#player')[0].play();
+    scrollToPlayer();
 });
 
-$('#list_seasons li').click(function () {
+function toggleSeason(dataInd) {
 
     var data_season = JSON.parse(fixJSON(seasons.info));
-
-    const dataInd = $(this).attr('data-ind');
+    
     $('#show_ep').html('');
-
     data_season[dataInd].forEach((data, ind) => {
         
         const color = searchAlreadyWatched(data.id) ? '#4bc658' : '#fff';
@@ -72,7 +72,7 @@ $('#list_seasons li').click(function () {
                         </a>
                     </div>
                     <div class="card__content">
-                        <h3 class="card__title"><a style="color:${color}" href="#">${data.name}</a></h3>
+                        <h3 class="card__title"><a style="color:${color}" id="name_ep_${ind}" href="#">${data.name}</a></h3>
                         <span class="card__category">
                             <a href="#">${seasons.term_lang} ${ind + 1}</a>
                         </span>
@@ -82,6 +82,14 @@ $('#list_seasons li').click(function () {
             <!-- end card -->
         `);
     });
+
+
+}
+
+$('#list_seasons li').click(function () {
+
+    const dataInd = $(this).attr('data-ind');
+    toggleSeason(dataInd);
 
 });
 
@@ -104,7 +112,8 @@ function searchAlreadyWatched(id) {
 
 }
 
-
+var ep_now = {};
+var is_next_ep = false;
 
 function watchSerie(temp, ep_num) {
 
@@ -124,17 +133,25 @@ function watchSerie(temp, ep_num) {
         info_player.id_ep = ep.id;
         info_player.already_watched = false;
         info_player.current_time = 0;
-
     }
+
+    if (is_next_ep) info_player.current_time = 0;
+
+    ep_now.temp = temp;
+    ep_now.ep = ep_num;
 
 
     $('#player').attr('src', `/watch/series/${ep.id}/${ep.extension}`);
     $('#title_serie').text(ep.name);
+    $('#plot').html(ep.plot);
     $('#img_serie').attr('src', ep.img);
     $('#name_ep_' + ep_num).css('color', '#4bc658');
     $('#watch_player').attr('hidden', false);
     $('#player')[0].play();
+
     scrollToPlayer();
+    lock_next_ep = true;
+    is_next_ep = false;
     
 
 }
@@ -247,8 +264,6 @@ async function addWatched() {
     var put = { id: info_player.id, type: info_player.type };
     if (is_serie) put.id_ep = info_player.id_ep;
 
-    console.log(put)
-
 
     $.ajax({
         url: "/profile/add-watched",
@@ -269,7 +284,7 @@ async function addWatched() {
 async function setCheckpoint(checkpoint) {
     $.ajax({
         url: "/profile/checkpoint-watched",
-        type: "PUT",
+        type: "POST",
         data: {id: info_player.id_watched, checkpoint},
         success: function (res) {
 
@@ -280,14 +295,45 @@ async function setCheckpoint(checkpoint) {
     });
 }
 
+function nextEpisode() {
+    console.log('caiu aqui');
+    is_next_ep = true;
+
+    var data_season = JSON.parse(fixJSON(seasons.info));
+    
+    const qtd_temps = data_season.length - 1;
+    const qtd_eps = data_season[ep_now.temp].length - 1;
+
+    var ep = ep_now.ep;
+    var temp = ep_now.temp;
+
+    if (ep == qtd_eps && temp == qtd_temps) {
+        return;
+    }
+
+    if (ep < qtd_eps) {
+        watchSerie(temp, ep + 1);
+
+    } else if (ep >= qtd_eps) {
+        toggleSeason(temp + 1);
+        watchSerie(temp + 1, 0);
+    }
+
+    
+    
+}
+
+var lock_next_ep = true;
+
 $('#watch_player').ready(function () {
 
     var first_play = false;
     var lastCheckPoint = 0;
-    var previousTime = 0;
+    var duration = 0;
 
     $('#player').on('loadeddata', () => {
        if (info_player.already_watched) {
+            duration = $('#player')[0].duration;
             $('#player')[0].currentTime = info_player.current_time;
        }
     });
@@ -305,6 +351,16 @@ $('#watch_player').ready(function () {
     $('#player').on('timeupdate', async function () {
         
         var timeNow = this.currentTime;
+        var percentage = (timeNow / duration) * 100;
+
+        if (percentage > 1 && percentage < 98.8 && lock_next_ep) {
+            lock_next_ep = false;
+        }
+        
+        if (percentage > 98.9 && !lock_next_ep && is_serie) {
+            lock_next_ep = true;
+            nextEpisode();
+        }
 
         if (timeNow < lastCheckPoint) {
             lastCheckPoint = timeNow;
