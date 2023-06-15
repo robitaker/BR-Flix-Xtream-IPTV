@@ -39,8 +39,8 @@
 	<section class="home">
 		<!-- home bg -->
 		<div class="owl-carousel home__bg">
-			<?php foreach ($suggestion_series as $row) { ?>
-				<div class="item home__cover" data-bg="<?= $row->backdrop ?>"></div>
+			<?php foreach ($suggestion_header as $row) { ?>
+				<div class="item home__cover" data-bg="<?= $row->img ?>"></div>
 			<?php } ?>
 		</div>
 		<!-- end home bg -->
@@ -48,7 +48,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
-					<h1 class="home__title"><b><?=$language->index->home__title_no_logged?></b></h1>
+					<h1 class="home__title"><b><?= $is_recents ? $language->index->home__title_recents :  $language->index->home__title_no_logged?></b></h1>
 
 					<button class="home__nav home__nav--prev" type="button">
 						<i class="icon ion-ios-arrow-round-back"></i>
@@ -61,19 +61,19 @@
 				<div class="col-12">
 					<div class="owl-carousel home__carousel home__carousel--bg">
 
-						<?php foreach ($suggestion_series as $row) { ?>
+						<?php foreach ($suggestion_header as $row) { ?>
 							<div class="card card--big">
 								<div class="card__cover">
 									<img src="<?= $row->img ?>" alt="">
 									<a href="/<?= $row->type . '/' . $row->id ?>" class="card__play">
 										<i class="icon ion-ios-play"></i>
 									</a>
-									<span class="card__rate card__rate--green"><?= $row->rating ?></span>
+									<span class="card__rate card__rate--green"><?= $row->rating ?? '0' ?></span>
 								</div>
 								<div class="card__content">
 									<h3 class="card__title"><a href="/<?= $row->type . '/' . $row->id ?>"><?= $row->name ?></a></h3>
 									<span class="card__category">
-										<a href="#"><?= $row->genre ?></a>
+										<a href="#"><?= $row->genre ?? '' ?></a>
 									</span>
 								</div>
 							</div>
@@ -204,7 +204,7 @@
 				<div class="col-12">
 					<div class="owl-carousel section__carousel" id="carousel1">
 
-						<?php foreach ($suggestion_vods as $row) { ?>
+						<?php foreach ($suggestion_footer as $row) { ?>
 							<div class="card">
 								<div class="card__cover">
 									<img src="<?= $row->img ?>" alt="">

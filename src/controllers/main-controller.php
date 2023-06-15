@@ -119,9 +119,30 @@ class RoutesController
     {
 
         //$this->xtream->generateJSON();
-
         $filters = $this->filters;
-        $msg = $this->msg;
+
+        $profile = $this->isLogged();
+
+        $suggestion_1 = false;
+        $suggestion_2 = false;
+        $is_recents = false;
+
+
+        if ($profile) {
+            $get_recents = $this->crud->getRecentsVideos($profile['id']);
+            if (count($get_recents) > 0) {
+                $suggestion_1 = json_decode(json_encode($get_recents));
+                $suggestion_2 = $this->xtream->getMoviesRand(18, true);
+                $is_recents = true;
+            } else {
+                $suggestion_1 = $this->xtream->getMoviesRand(24, true);
+                $suggestion_2 = $this->xtream->getMoviesRand(18);
+            }
+        } else {
+            $suggestion_1 = $this->xtream->getMoviesRand(24, true);
+            $suggestion_2 = $this->xtream->getMoviesRand(18);
+        }
+
 
         $body = [
 
@@ -141,8 +162,9 @@ class RoutesController
 
             ])),
 
-            'suggestion_vods' => $this->xtream->getMoviesRand(24),
-            'suggestion_series' => $this->xtream->getMoviesRand(18, true),
+            'suggestion_header' => $suggestion_1,
+            'suggestion_footer' => $suggestion_2,
+            'is_recents' => $is_recents,
             'category' => $this->xtream->getAllCategory()
         ];
 
@@ -516,7 +538,7 @@ class RoutesController
             $id_cache = $check_cache[0];
             $info_video = $check_cache[1];
 
-            
+
             if ($id_cache) {
                 $add_watched = $this->crud->addWatch($profile['id'], $id, $id_ep, $type);
 
@@ -550,14 +572,13 @@ class RoutesController
 
             $id = $filters->Num($params['id']);
             $checkpoint = $filters->Num($params['checkpoint'], '.');
-    
+
             $update = $this->crud->setCheckpoint($profile['id'], $id, $checkpoint);
-            
+
             if ($update) {
                 $data = true;
                 $code = 200;
             }
-
         }
 
 
@@ -576,12 +597,10 @@ class RoutesController
         if (!$profile) {
             return $res->withHeader('Location', '/')->withStatus(302);
             exit;
-
         } else {
             $data_profile = $this->crud->getProfileData($profile['id']);
             $data_profile['list'] = isset($data_profile['list'][0]) ? json_decode($data_profile['list']) : [];
-            $data_profile['watched'] = isset($data_profile['watched'][0]) ? json_decode($data_profile['watched']) : [];  
-            
+            $data_profile['watched'] = isset($data_profile['watched'][0]) ? json_decode($data_profile['watched']) : [];
         }
 
         $body = [

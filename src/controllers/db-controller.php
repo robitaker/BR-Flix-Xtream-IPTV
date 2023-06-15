@@ -361,6 +361,40 @@ class CRUD
         return $results;
     }
 
+    
+    public function getRecentsVideos($id_profile)
+    {
+
+        $data = [$id_profile];
+
+        $results = false;
+
+        try {
+
+            $sql = "SELECT id_video id, type, name, img 
+             FROM (
+                SELECT c.id_video, MIN(c.type) AS type, MIN(c.name) AS name, MIN(c.img) AS img
+                FROM cache_info c
+                JOIN watched w ON c.id_video = w.id_video AND c.type = w.type AND w.id_user = ?
+                GROUP BY c.id_video
+                ORDER BY MAX(w.id) DESC
+                LIMIT 30
+              ) AS w
+            ";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            print_r($e->getMessage());
+        }
+
+        return $results;
+    }
+
+
+
 
 
 

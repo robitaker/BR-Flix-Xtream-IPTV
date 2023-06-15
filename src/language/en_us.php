@@ -19,7 +19,6 @@ $translation =  [
         'news' => 'News',
         'mobile_options' => 'Options',
         'suggestions' => 'Suggestions'
-
     ],
 
     'details' => [
