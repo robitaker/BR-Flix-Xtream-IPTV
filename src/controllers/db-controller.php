@@ -324,26 +324,29 @@ class CRUD
 
         try {
 
-            $sql = "SELECT
-
-            (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id_video, 'type', c.type, 'name', c.name, 'img', c.img))
-             FROM (
-               SELECT c.id_video, c.type, c.name, c.img
-               FROM cache_info c
-               JOIN favorites f ON c.id_video = f.id_video AND c.type = f.type AND f.id_user = ?
-               GROUP BY f.id
-               ORDER BY f.id DESC
-             ) AS c) AS list,
-             
-             (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', w.id_video, 'type', w.type, 'name', w.name, 'img', w.img))
-             FROM (
-               SELECT c.id_video, MIN(c.type) AS type, MIN(c.name) AS name, MIN(c.img) AS img
-               FROM cache_info c
-               JOIN watched w ON c.id_video = w.id_video AND c.type = w.type AND w.id_user = ?
-               GROUP BY w.id_video
-               ORDER BY w.id_video DESC
-               LIMIT 30
-             ) AS w) AS watched;
+            $sql = "SELECT 
+            (
+              SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id_video, 'type', c.type, 'name', c.name, 'img', c.img))
+              FROM (
+                SELECT c.id_video, c.type, c.name, c.img
+                FROM cache_info c
+                JOIN favorites f ON c.id_video = f.id_video AND c.type = f.type AND f.id_user = ?
+                GROUP BY c.id_video, c.type, c.name, c.img
+                ORDER BY f.id DESC
+              ) AS c
+            ) AS list,
+            (
+              SELECT JSON_ARRAYAGG(JSON_OBJECT('id', w.id_video, 'type', w.type, 'name', w.name, 'img', w.img))
+              FROM (
+                SELECT c.id_video, MIN(c.type) AS type, MIN(c.name) AS name, MIN(c.img) AS img
+                FROM cache_info c
+                JOIN watched w ON c.id_video = w.id_video AND c.type = w.type AND w.id_user = ?
+                GROUP BY c.id_video
+                ORDER BY c.id_video DESC
+                LIMIT 30
+              ) AS w
+            ) AS watched;
+          
 
             ";
 
