@@ -565,6 +565,37 @@ class RoutesController
         return $res->withStatus($code);
     }
 
+    public function Profile($req, $res, $args)
+    {
+
+        $filters = $this->filters;
+
+        $profile = $this->isLogged();
+        $data_profile = false;
+
+        if (!$profile) {
+            return $res->withHeader('Location', '/')->withStatus(302);
+            exit;
+
+        } else {
+            $data_profile = $this->crud->getProfileData($profile['id']);
+            $data_profile['list'] = isset($data_profile['list'][0]) ? json_decode($data_profile['list']) : [];
+            $data_profile['watched'] = isset($data_profile['watched'][0]) ? json_decode($data_profile['watched']) : [];  
+            
+        }
+
+        $body = [
+
+            'profile' => $profile,
+            'lang_opt' => $this->Language(true),
+            'language' => $this->Language(),
+            'category' => $this->xtream->getAllCategory(),
+            'data_profile' => $data_profile
+        ];
+
+        return $this->renderer->render($res, "profile.php", $body);
+    }
+
 
     public function pageError($req, $res, $args)
     {

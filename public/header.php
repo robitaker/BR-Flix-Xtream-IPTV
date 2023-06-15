@@ -107,10 +107,10 @@ $url_now = base64_encode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
                         <?php if ($profile) { ?>
 
                             <div class="profile__avatar">
-                                <img src="/assets/img/user.svg" alt="">
+                                <a href="/profile" ><img src="/assets/img/user.svg" alt=""></a>
                             </div>
                             <div class="profile__meta">
-                                <h3><?= $profile['login'] ?></h3>
+                            <a href="/profile" ><h3><?= $profile['login'] ?></h3></a>
                                 <span>ID: <?= $profile['id'] ?></span>
                             </div>
 

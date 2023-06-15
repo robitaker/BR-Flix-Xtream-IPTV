@@ -56,6 +56,17 @@ $translation =  [
         'found' => 'Resultados encontrados',
         'title_not_found' => 'Oops, nada aqui :/',
         'search' => 'Procurar'
+    ],
+
+    'profile' => [
+        'home' => 'Meu perfil',
+        'list' => 'Minha lista',
+        'watched' => 'Assistidos',
+        'settings' => 'Configurações',
+        'later' => 'Você deixou para assistir depois',
+        'later_no' => 'Você não salvou nada na sua lista ainda',
+        'recent' => 'Últimos 30 títulos assistidos',
+        'recent_no' => 'Que tal assistir algo antes de voltar aqui ?'
     ]
 ];
 

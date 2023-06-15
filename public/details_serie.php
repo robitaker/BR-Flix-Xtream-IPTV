@@ -76,7 +76,7 @@
 									<span class="card__rate card__rate--green"><?= $details->rating ?></span>
 								</div>
 
-								<?php if (!isset($info_db->favorite)) {?>
+								<?php if (!isset($info_db->favorite) && $profile) { ?>
 									<a href="#" data-id="<?= $details->id ?>" data-type="<?= $details->type ?>" id="add_list" class="card__trailer"><i class="icon ion-ios-add-circle"></i><?= $language->details->add_list ?></a>
 									<?php } else if (isset($info_db->favorite)) {?>
 									<a href="#" data-id="<?= $details->id ?>" data-type="<?= $details->type ?>" id="remove_list" class="card__trailer"><i class="icon ion-ios-close-circle icon"></i><?= $language->details->remove_list ?></a>

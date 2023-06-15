@@ -235,7 +235,7 @@ function removeList(id, type) {
 
     $.ajax({
         url: "/profile/remove-list",
-        type: "DELETE",
+        type: "POST",
         data: { id, type },
         success: function (res) {
 

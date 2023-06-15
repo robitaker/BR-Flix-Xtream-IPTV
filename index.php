@@ -47,8 +47,11 @@ $app->get('/watch/{type}/{id}/{extension}', [$routes, 'watchMovie']);
 
 $app->group('/profile', function (RouteCollectorProxy $group) use ($routes) {
 
+    $group->get('', [$routes, 'Profile']);
+
+
     $group->post('/add-list', [$routes, 'addList']);
-    $group->delete('/remove-list', [$routes, 'removeList']);
+    $group->post('/remove-list', [$routes, 'removeList']);
 
     $group->post('/add-watched', [$routes, 'addWatched']);
     $group->post('/checkpoint-watched', [$routes, 'updateCheckpoint']);
