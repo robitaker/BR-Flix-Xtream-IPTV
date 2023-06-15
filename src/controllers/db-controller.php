@@ -332,7 +332,7 @@ class CRUD
                 FROM cache_info c
                 JOIN favorites f ON c.id_video = f.id_video AND c.type = f.type AND f.id_user = ?
                 GROUP BY c.id_video, c.type, c.name, c.img
-                ORDER BY f.id DESC
+                ORDER BY MAX(f.id) DESC
               ) AS c
             ) AS list,
             (
@@ -342,13 +342,10 @@ class CRUD
                 FROM cache_info c
                 JOIN watched w ON c.id_video = w.id_video AND c.type = w.type AND w.id_user = ?
                 GROUP BY c.id_video
-                ORDER BY c.id_video DESC
+                ORDER BY MAX(w.id) DESC
                 LIMIT 30
               ) AS w
-            ) AS watched;
-          
-
-            ";
+            ) AS watched; ";
 
             
 
