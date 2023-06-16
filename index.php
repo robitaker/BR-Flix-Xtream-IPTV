@@ -1,6 +1,6 @@
 <?php
 
-//error_reporting(0);
+error_reporting(0);
 
 
 use Slim\Factory\AppFactory;
@@ -56,6 +56,7 @@ $app->group('/profile', function (RouteCollectorProxy $group) use ($routes) {
     $group->post('/checkpoint-watched', [$routes, 'updateCheckpoint']);
     $group->post('/edit', [$routes, 'editProfile']);
     $group->post('/xtream-list', [$routes, 'xtreamList']);
+    $group->get('/logout', [$routes, 'Logout']);
 
 
 });

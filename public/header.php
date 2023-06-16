@@ -58,16 +58,7 @@ $url_now = base64_encode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
                             <a class="dropdown-toggle header__nav-link header__nav-link--more" href="#" role="button" id="dropdownMenuMore" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon ion-ios-more"></i></a>
 
                             <ul class="dropdown-menu header__dropdown-menu scrollbar-dropdown" aria-labelledby="dropdownMenuMore">
-                                <li><a href="about.html">About</a></li>
-                                <li><a href="profile.html">Profile</a></li>
-                                <li><a href="contacts.html">Contacts</a></li>
-                                <li><a href="faq.html">Help center</a></li>
-                                <li><a href="privacy.html">Privacy policy</a></li>
-                                <li><a href="http://hotflix.volkovdesign.com/admin/index.html" target="_blank">Admin pages</a></li>
-                                <li><a href="signin.html">Sign in</a></li>
-                                <li><a href="signup.html">Sign up</a></li>
-                                <li><a href="forgot.html">Forgot password</a></li>
-                                <li><a href="404.html">404 Page</a></li>
+                                <li><a href="/">Test</a></li>
                             </ul>
                         </li>
                         <!-- end dropdown -->

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from hotflix.volkovdesign.com/main/404.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 May 2023 18:20:26 GMT -->
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -39,8 +38,8 @@
 					<div class="page-404__wrap">
 						<div class="page-404__content">
 							<h1 class="page-404__title">404</h1>
-							<p class="page-404__text">The page you are looking for not available!</p>
-							<a href="index.html" class="page-404__btn">go back</a>
+							<p class="page-404__text"><?=$language->err404->description?></p>
+							<a href="/" class="page-404__btn"><?=$language->err404->btn?></a>
 						</div>
 					</div>
 				</div>
@@ -64,5 +63,4 @@
 	<script src="/assets/js/main.js"></script>
 </body>
 
-<!-- Mirrored from hotflix.volkovdesign.com/main/404.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 May 2023 18:20:26 GMT -->
 </html>

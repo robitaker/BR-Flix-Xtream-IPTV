@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from hotflix.volkovdesign.com/main/profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 May 2023 18:20:26 GMT -->
 
 <head>
 	<meta charset="utf-8">
@@ -47,7 +46,7 @@
 
 						<!-- breadcrumb -->
 						<ul class="breadcrumb">
-							<li class="breadcrumb__item"><a href="index.html"></a></li>
+							<li class="breadcrumb__item"><a href="/"></a></li>
 						</ul>
 						<!-- end breadcrumb -->
 					</div>
@@ -110,7 +109,7 @@
 							</div>
 							<!-- end content mobile tabs nav -->
 
-							<button class="profile__logout" type="button">
+							<button onclick="window.location.href = '/profile/logout' " class="profile__logout" type="button">
 								<i class="icon ion-ios-log-out"></i>
 								<span>Logout</span>
 							</button>
@@ -188,11 +187,11 @@
 
 										<div class="section__nav-wrap">
 
-											<button class="section__nav section__nav--prev" type="button" data-nav="#carousel1">
+											<button class="section__nav section__nav--prev" type="button" data-nav="#carousel2">
 												<i class="icon ion-ios-arrow-back"></i>
 											</button>
 
-											<button class="section__nav section__nav--next" type="button" data-nav="#carousel1">
+											<button class="section__nav section__nav--next" type="button" data-nav="#carousel2">
 												<i class="icon ion-ios-arrow-forward"></i>
 											</button>
 										</div>
@@ -202,7 +201,7 @@
 
 								<!-- carousel -->
 								<div class="col-12">
-									<div class="owl-carousel section__carousel" id="carousel1">
+									<div class="owl-carousel section__carousel" id="carousel2">
 
 										<?php foreach ($data_profile['watched'] as $row) { ?>
 											<div class="card">
@@ -341,79 +340,12 @@
 	</div>
 	<!-- end content -->
 
-	<!-- partners -->
-	<section class="section section--border">
-		<div class="container">
-			<div class="row">
-				<!-- section title -->
-				<div class="col-12">
-					<h2 class="section__title section__title--mb">Our Partners</h2>
-				</div>
-				<!-- end section title -->
 
-				<!-- section text -->
-				<div class="col-12">
-					<p class="section__text">It is a long <b>established</b> fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using.</p>
-				</div>
-				<!-- end section text -->
-
-				<!-- partner -->
-				<div class="col-6 col-sm-4 col-md-3 col-lg-2">
-					<a href="#" class="partner">
-						<img src="/assets/img/partners/themeforest-light-background.png" alt="" class="partner__img">
-					</a>
-				</div>
-				<!-- end partner -->
-
-				<!-- partner -->
-				<div class="col-6 col-sm-4 col-md-3 col-lg-2">
-					<a href="#" class="partner">
-						<img src="/assets/img/partners/audiojungle-light-background.png" alt="" class="partner__img">
-					</a>
-				</div>
-				<!-- end partner -->
-
-				<!-- partner -->
-				<div class="col-6 col-sm-4 col-md-3 col-lg-2">
-					<a href="#" class="partner">
-						<img src="/assets/img/partners/codecanyon-light-background.png" alt="" class="partner__img">
-					</a>
-				</div>
-				<!-- end partner -->
-
-				<!-- partner -->
-				<div class="col-6 col-sm-4 col-md-3 col-lg-2">
-					<a href="#" class="partner">
-						<img src="/assets/img/partners/photodune-light-background.png" alt="" class="partner__img">
-					</a>
-				</div>
-				<!-- end partner -->
-
-				<!-- partner -->
-				<div class="col-6 col-sm-4 col-md-3 col-lg-2">
-					<a href="#" class="partner">
-						<img src="/assets/img/partners/activeden-light-background.png" alt="" class="partner__img">
-					</a>
-				</div>
-				<!-- end partner -->
-
-				<!-- partner -->
-				<div class="col-6 col-sm-4 col-md-3 col-lg-2">
-					<a href="#" class="partner">
-						<img src="/assets/img/partners/3docean-light-background.png" alt="" class="partner__img">
-					</a>
-				</div>
-				<!-- end partner -->
-			</div>
-		</div>
-	</section>
-	<!-- end partners -->
 
 	<?php include 'footer.php'; ?>
 
 
 </body>
 
-<!-- Mirrored from hotflix.volkovdesign.com/main/profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 May 2023 18:20:26 GMT -->
 
 </html>

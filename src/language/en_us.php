@@ -101,31 +101,30 @@ $translation =  [
         'update' => 'Update'
     ],
 
+
+    'err404' => [
+        'description' => 'The page you are looking for not available!',
+        'btn' => 'Go back'
+    ],
+
     'warnings' => [
 
-        // Errors
 
-        "name_invalid" => "Name can contain a maximum of 60 characters.",
-        "email_invalid" => "This email is invalid, please enter a valid email.",
-        "username_invalid" => "Username contains illegal characters or is longer than 30 characters.",
-        "pass_invalid" => "Password can contain a maximum of 50 characters.",
-        "user_already_exists" => "User already exists, create a new one.",
-        "pass_user_invalid" => "Incorrect username or password.",
-        "generic" => "An error occurred, please try again.",
-
-        // Success
-
-        "create_account" => "User successfully registered.",
-
-        // Search
-        "caracteres_search" => "You need to provide a minimum of 2 characters or a maximum of 20 characters to search.",
-
-
-        // Profile
-        "not_logged" => "user is not logged in.",
-        "edit_success" => "Profile successfully updated!",
-        "edit_error" => "There was an error updating your profile, please try again.",
-        "new_pass_error" => "Passwords are not equal or characters are less than 3 or greater than 50."
-    ]
+        'name_invalid' => 'Name can contain a maximum of 60 characters.',
+        'email_invalid' => 'This email is invalid, please enter a valid email.',
+        'username_invalid' => 'Username contains illegal characters or is longer than 30 characters.',
+        'pass_invalid' => 'Password can contain a maximum of 50 characters.',
+        'user_already_exists' => 'User already exists, create a new one.',
+        'pass_user_invalid' => 'Incorrect username or password.',
+        'generic' => 'An error occurred, please try again.',
+        'create_account' => 'User successfully registered.',
+        'caracteres_search' => 'You need to provide a minimum of 2 characters or a maximum of 20 characters to search.',
+        'not_logged' => 'user is not logged in.',
+        'edit_success' => 'Profile successfully updated!',
+        'edit_error' => 'There was an error updating your profile, please try again.',
+        'new_pass_error' => 'Passwords are not equal or characters are less than 3 or greater than 50.',
+        'xtream_success' => 'Your catalog has been successfully updated!',
+        'xtream_error' => 'Error updating your list, please check that you entered the data correctly.'
+        ]
 
 ];

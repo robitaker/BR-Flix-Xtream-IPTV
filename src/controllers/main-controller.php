@@ -35,6 +35,22 @@ class RoutesController
 
             $get = $this->crud->getProfile($_SESSION['token']);
             if ($get) $profile = $get;
+
+        } else if (isset($_COOKIE['token'], $_COOKIE['user'])) {
+
+            $uuid = $filters->AlNum($_COOKIE['token'], '-');
+
+            if ($filters->validUUID($uuid)) {
+                $username = $filters->AlNum($_COOKIE['user'], '_.');
+                $get = $this->crud->getProfile($uuid, $username);
+
+                if ($get) {
+                    session_start();
+                    $_SESSION['token'] = $uuid;
+                    $profile = $get;
+                }
+                
+            }
         }
 
         return $profile;
@@ -50,7 +66,7 @@ class RoutesController
 
         ];
 
-        if (isset($_COOKIE['language'])) $now = $this->filters->Alfa($_COOKIE['language'], '_');
+        if (isset($_COOKIE['language'])) $now = $this->filters->Alfa($_COOKIE['language'], ' _');
         else $now = 'PT';
 
         if (array_key_exists($now, $languages)) {
@@ -144,7 +160,7 @@ class RoutesController
 
         $body = [
 
-            'profile' => $this->isLogged(),
+            'profile' => $profile,
             'lang_opt' => $this->Language(true),
             'language' => $this->Language(),
             'vods_index' => json_decode(json_encode([
@@ -280,6 +296,9 @@ class RoutesController
         if ($check) {
             session_start();
             $_SESSION['token'] = $check;
+            setcookie('token', $check, time() + (7 * 24 * 60 * 60));
+            setcookie('user', $username, time() + (7 * 24 * 60 * 60));
+
             return $res->withHeader('Location', $redirect)->withStatus(302);
         } else {
             $body['error'] = $language->warnings->pass_user_invalid;
@@ -620,6 +639,12 @@ class RoutesController
             if ($_GET['edit'] == 'success') {
                 $warning['class'] = 'success_form';
                 $warning['msg'] = $language->warnings->edit_success;
+            } else if ($_GET['edit'] == 'successXtream') {
+                $warning['class'] = 'success_form';
+                $warning['msg'] = $language->warnings->xtream_success;
+            } else if ($_GET['edit'] == 'errorXtream') {
+                $warning['class'] = 'error_form';
+                $warning['msg'] = $language->warnings->xtream_error;
             } else if ($_GET['edit'] == 'passError') {
                 $warning['class'] = 'error_form';
                 $warning['msg'] = $language->warnings->new_pass_error;
@@ -628,9 +653,6 @@ class RoutesController
                 $warning['msg'] = $language->warnings->edit_error;
             }
         }
-
-        print_r($data_profile);
-
 
         $body = [
 
@@ -684,24 +706,72 @@ class RoutesController
             if ($update) {
                 $msg_callback = "success";
             }
-
-            return $res->withHeader('Location', '/profile' . '?edit=' . $msg_callback)->withStatus(302);
         }
 
+        return $res->withHeader('Location', '/profile' . '?edit=' . $msg_callback)->withStatus(302);
+    }
 
-        $body = [
+    public function xtreamList($req, $res, $args)
+    {
 
-            'profile' => $profile,
-            'lang_opt' => $this->Language(true),
-            'language' => $this->Language(),
-            'category' => $this->xtream->getAllCategory(),
-        ];
+        $filters = $this->filters;
+        $profile = $this->isLogged();
 
-        return $this->renderer->render($res, "profile.php", $body);
+        $msg_callback = "errorXtream";
+
+        if ($profile) {
+
+            $params = $req->getParsedBody();
+
+            $user = $filters->Xss($params['username']);
+            $pass = $filters->Xss($params['password']);
+            $url = $filters->Xss($params['url']);
+
+            $last  = substr($url, strlen($url) - 1, 1);
+
+            if ($last == '/') {
+                $url = substr($url, 0, -1);
+            }
+
+            $link = $url . '/player_api.php?username=' . $user . '&password=' . $pass;
+            $data = @file_get_contents($link);
+            $data = json_decode($data);
+
+            if ($data) {
+                if ($data->user_info->auth) {
+                    $update = $this->crud->xtreamEdit($user, $pass, $url);
+
+                    if ($update) {
+                        $msg_callback = 'successXtream';
+                        $this->xtream->generateJSON();
+                    }
+                }
+            }
+        }
+
+        return $res->withHeader('Location', '/profile' . '?edit=' . $msg_callback)->withStatus(302);
+    }
+
+
+    public function Logout($req, $res, $args)
+    {
+
+        session_destroy();
+
+        foreach ($_COOKIE as $cookie_name => $cookie_value) {
+            if ($cookie_name != 'language') {
+                unset($_COOKIE[$cookie_name]);
+                setcookie($cookie_name, '', -1, '/');
+            }
+        }
+
+        return $res->withHeader('Location', '/')->withStatus(302);
+        
     }
 
     public function pageError($req, $res, $args)
     {
-        return $this->renderer->render($res, "404.php", []);
+        $language = $this->Language();
+        return $this->renderer->render($res, "404.php", ['language' => $language ]);
     }
 }

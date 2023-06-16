@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from hotflix.volkovdesign.com/main/catalog.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 May 2023 18:14:59 GMT -->
 
 <head>
 	<meta charset="utf-8">
@@ -163,6 +162,5 @@
 
 </body>
 
-<!-- Mirrored from hotflix.volkovdesign.com/main/catalog.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 May 2023 18:15:01 GMT -->
 
 </html>

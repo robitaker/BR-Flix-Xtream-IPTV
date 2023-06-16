@@ -161,7 +161,12 @@ class Xtream
 
         $type  = $is_serie ? 'series.json' : 'vods.json';
         $get  = json_decode(file_get_contents($this->path . '/' . $type));
-        $total = count($get);
+        $total = $get ? count($get) : 0;
+
+        if ($total == 0) {
+            return [];
+        }
+
         $offset = mt_rand(0, $total - $max);
 
         if ($is_serie) $dataByRand = $this->organizerSeries(array_slice($get, $offset, $max));

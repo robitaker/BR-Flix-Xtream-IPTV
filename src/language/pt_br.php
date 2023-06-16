@@ -105,31 +105,29 @@ $translation =  [
 
     ],
 
+    'err404' => [
+        'description' => 'Oops, página não encontrada.',
+        'btn' => 'Voltar'
+    ],
+
     'warnings' => [
 
-        // Errors
 
-        "name_invalid" => "O nome pode conter no máximo 60 caracteres.",
-        "email_invalid" => "Este e-mail é inválido, por favor insira um e-mail válido.",
-        "username_invalid" => "O nome de usuário contém caracteres ilegais ou tem mais de 30 caracteres.",
-        "pass_invalid" => "A senha pode conter no máximo 50 caracteres.",
-        "user_already_exists" => "O usuário já existe, crie um novo.",
-        "pass_user_invalid" => "Usuario ou senha incorretos.",
-        "generic" => "Ocorreu um erro. Por favor, tente novamente.",
-
-        // Success
-
-        "create_account" => "Usuario registado com sucesso.",
-
-        // Search
-        "caracteres_search" => "Você precisa fornecer no mínimo 2 caracteres ou no máximo 20 caracteres para pesquisar.",
-
-
-        // Profile
-        "not_logged" => "usuário não está logado.",
-        "edit_success" => "Perfil atualizado com sucesso!",
-        "edit_error" => "Ocorreu algum erro ao atualizar seu perfil, tente novamente.",
-        "new_pass_error" => "Senhas não são iguais ou caracteres são menor que 3 ou maior que 50."
+        'name_invalid' => 'O nome pode conter no máximo 60 caracteres.',
+        'email_invalid' => 'Este e-mail é inválido, por favor insira um e-mail válido.',
+        'username_invalid' => 'O nome de usuário contém caracteres ilegais ou tem mais de 30 caracteres.',
+        'pass_invalid' => 'A senha pode conter no máximo 50 caracteres.',
+        'user_already_exists' => 'O usuário já existe, crie um novo.',
+        'pass_user_invalid' => 'Usuario ou senha incorretos.',
+        'generic' => 'Ocorreu um erro. Por favor, tente novamente.',
+        'create_account' => 'Usuario registado com sucesso.',
+        'caracteres_search' => 'Você precisa fornecer no mínimo 2 caracteres ou no máximo 20 caracteres para pesquisar.',
+        'not_logged' => 'usuário não está logado.',
+        'edit_success' => 'Perfil atualizado com sucesso!',
+        'edit_error' => 'Ocorreu algum erro ao atualizar seu perfil, tente novamente.',
+        'new_pass_error' => 'Senhas não são iguais ou caracteres são menor que 3 ou maior que 50.',
+        'xtream_success' => 'Seu catálogo foi atualizado com sucesso!',
+        'xtream_error' => 'Erro ao atualizar sua lista, verifique se você inseriu os dados corretamente.'
     ]
 ];
 

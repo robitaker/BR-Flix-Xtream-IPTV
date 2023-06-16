@@ -51,15 +51,23 @@ class CRUD
         return $uuid;
     }
 
-    public function getProfile($uuid)
+    public function getProfile($uuid, $login = false)
     {
 
+
         $data = [$uuid];
+        $and = '';
+
+        if ($login) {
+            $and = 'AND login = ?';
+            $data[] = $login;
+        }
+
         $profile = false;
 
         try {
 
-            $sql = "SELECT id_user AS id, login, name, email, level FROM  users WHERE uuid = ?;";
+            $sql = "SELECT id_user AS id, login, name, email, level FROM  users WHERE uuid = ? $and;";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($data);
@@ -424,6 +432,28 @@ class CRUD
         return $status;
     }
 
+
+    public function xtreamEdit($user, $pass, $url)
+    {
+
+        $data = [$url, $user, $pass];
+
+        $status = false;
+
+        try {
+
+            $sql = "UPDATE xtream SET url = ?, user = ?, pass = ? WHERE id = 1";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+            $status = true;
+
+        } catch (PDOException $e) {
+            print_r($e->getMessage());
+        }
+
+        return $status;
+    }
 
 
 

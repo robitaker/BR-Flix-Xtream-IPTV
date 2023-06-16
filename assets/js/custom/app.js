@@ -211,7 +211,6 @@ $('#add_list').on('click', function () {
             data: { id, type },
             success: function (res) {
 
-                console.log(res);
                 toggleToRemove('add_list');
                 is_added = true;
 
@@ -273,10 +272,8 @@ async function addWatched() {
 
             info_player.already_watched = true;
             info_player.id_watched = JSON.parse(res).id;
-            console.log(res);
         },
         error: function (err) {
-            console.log(err.responseText);
         }
     });
 }

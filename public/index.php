@@ -184,7 +184,6 @@
 						<h2 class="section__title"><?=$language->index->suggestions?></h2>
 
 						<div class="section__nav-wrap">
-							<a href="catalog.html" class="section__view">View All</a>
 
 							<button class="section__nav section__nav--prev" type="button" data-nav="#carousel1">
 								<i class="icon ion-ios-arrow-back"></i>

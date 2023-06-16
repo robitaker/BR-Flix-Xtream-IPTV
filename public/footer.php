@@ -4,16 +4,16 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="footer__content">
-						<a href="index.html" class="footer__logo">
+						<a href="/" class="footer__logo">
 							<img src="/assets/img/logo.svg" alt="">
 						</a>
 
-						<span class="footer__copyright">© HOTFLIX, 2019—2021 <br> Create by <a href="https://themeforest.net/user/dmitryvolkov/portfolio" target="_blank">Dmitry Volkov</a></span>
+						<span class="footer__copyright">© BRFLIX, 2023 <br> Create by <a href="https://github.com/robitaker" target="_blank">Robson</a></span>
 
 						<nav class="footer__nav">
-							<a href="about.html">About Us</a>
-							<a href="contacts.html">Contacts</a>
-							<a href="privacy.html">Privacy policy</a>
+							<a href="/"><?= $language->header->home ?></a>
+							<a href="/catalog/movies/0/1"><?= $language->header->films ?></a>
+							<a href="/catalog/series/0/1"><?= $language->header->series ?></a>
 						</nav>
 
 						<button class="footer__back" type="button">
