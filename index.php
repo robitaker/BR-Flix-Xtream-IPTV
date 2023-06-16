@@ -14,7 +14,6 @@ if (isset($_COOKIE['PHPSESSID'])) {
 require "./vendor/autoload.php";
 $app = AppFactory::create();
 
-// Meus includes
 
 include './src/db.php';
 $dbInstance = Conn::getInstance();
