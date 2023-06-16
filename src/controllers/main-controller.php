@@ -11,17 +11,15 @@ class RoutesController
 
     private $dbInstance;
     private $filters;
-    private $msg;
 
     private $crud;
     private $renderer;
     private $xtream;
 
-    public function __construct($db, $filters, $msg)
+    public function __construct($db, $filters)
     {
         $this->dbInstance = $db;
         $this->filters = $filters;
-        $this->msg = $msg;
 
         $this->crud = new CRUD($db);
         $this->renderer = new PhpRenderer('public');
@@ -47,13 +45,13 @@ class RoutesController
 
         $languages = [
 
-            'EN' => ['English', 'en_us.php'],
-            'PT' => ['Portuguese', 'pt_br.php']
+            'PT' => ['Portuguese', 'pt_br.php'],
+            'EN' => ['English', 'en_us.php']
 
         ];
 
         if (isset($_COOKIE['language'])) $now = $this->filters->Alfa($_COOKIE['language'], '_');
-        else $now = 'EN';
+        else $now = 'PT';
 
         if (array_key_exists($now, $languages)) {
 
@@ -64,7 +62,7 @@ class RoutesController
         } else {
 
             $languages = [
-                'now' => 'EN',
+                'now' => 'PT',
                 'opts' => $languages
             ];
         }
@@ -174,19 +172,16 @@ class RoutesController
 
     public function Login($req, $res, $args)
     {
-        $filters = $this->filters;
-        $msg = $this->msg;
-
         $redirect = $this->detectRedirect($args['redirect'] ?? '/');
-
 
         $body = [
             'create' => false,
-            'redirect' => $redirect
+            'redirect' => $redirect,
+            'language' => $this->Language()
         ];
 
         if (isset($_COOKIE['register_user'])) {
-            $body['create'] =  $msg->create_account;
+            $body['create'] =  $_COOKIE['register_user'];
             setcookie('register_user', false, -1);
         }
 
@@ -197,7 +192,10 @@ class RoutesController
     {
 
         $redirect = $this->detectRedirect($args['redirect'] ?? '/');
-        $body = ['redirect' => $redirect];
+        $body = [
+            'redirect' => $redirect,
+            'language' => $this->Language()
+        ];
 
         return $this->renderer->render($res, "register.php", $body);
     }
@@ -206,7 +204,6 @@ class RoutesController
     {
         $params = $req->getParsedBody();
         $filters = $this->filters;
-        $msg = $this->msg;
 
         $name = $filters->Alfa($filters->Xss($params['name']), ' ');
         $email = $filters->Xss($params['email']);
@@ -215,20 +212,23 @@ class RoutesController
 
         $redirect = $this->detectRedirect($params['redirect'] ?? '/');
 
+        $language = $this->Language();
+
         $body = [
             'error' => false,
             'success' => false,
+            'language' => $language,
             'redirect' => $redirect
         ];
 
         if (strlen($name) > 60) {
-            $body['error'] = $msg->name_invalid;
+            $body['error'] = $language->warnings->name_invalid;
         } elseif (!$filters->emailValid($email)) {
-            $body['error'] = $msg->email_invalid;
+            $body['error'] = $language->warnings->email_invalid;
         } elseif (strlen($username) > 30 || strlen($username) < 3 || !$filters->isAlNum($username, '_.')) {
-            $body['error'] = $msg->username_invalid;
+            $body['error'] = $language->warnings->username_invalid;
         } elseif (strlen($password) > 50 || strlen($password) < 3) {
-            $body['error'] = $msg->pass_invalid;
+            $body['error'] = $language->warnings->pass_invalid;
         }
 
         if ($body['error']) {
@@ -242,13 +242,13 @@ class RoutesController
 
         if ($add == 1) {
 
-            setcookie("register_user", $msg->create_account, time() + 3600);
+            setcookie("register_user", $language->warnings->create_account, time() + 3600);
             return $res->withHeader('Location', '/login' . ($redirect ? '/' . $redirect : ''))->withStatus(302);
         } elseif ($add == 3) {
-            $body['error'] = $msg->user_already_exists;
+            $body['error'] = $language->warnings->user_already_exists;
             return $this->renderer->render($res, "register.php", $body);
         } else {
-            $body['error'] = $msg->generic;
+            $body['error'] = $language->warnings->generic;
             return $this->renderer->render($res, "register.php", $body);
         }
     }
@@ -259,17 +259,18 @@ class RoutesController
 
         $params = $req->getParsedBody();
         $filters = $this->filters;
-        $msg = $this->msg;
 
         $username = $filters->Xss($params['username']);
         $password = $filters->Xss($params['password']);
 
-
         $redirect_ = $this->detectRedirect($params['redirect'] ?? '/', false);
         $redirect = $redirect_ ? $redirect_ : '/';
 
+        $language = $this->Language();
+
         $body = [
             'error' => false,
+            'language' => $language,
             'redirect' => base64_encode($redirect_)
         ];
 
@@ -281,7 +282,7 @@ class RoutesController
             $_SESSION['token'] = $check;
             return $res->withHeader('Location', $redirect)->withStatus(302);
         } else {
-            $body['error'] = $msg->pass_user_invalid;
+            $body['error'] = $language->warnings->pass_user_invalid;
             return $this->renderer->render($res, "login.php", $body);
         }
 
@@ -419,10 +420,12 @@ class RoutesController
         $term = $filters->Xss($term);
         $term = $filters->scapeString($term);
 
+        $language = $this->Language();
+
         if (strlen($term) > 2 && strlen($term) < 20) {
             $results = $this->xtream->searchByTerm($term, $filters);
         } else {
-            $msg = $this->msg->caracteres_search;
+            $msg = $language->warnings->caracteres_search;
             $results = json_decode(json_encode([
                 'term' => $term,
                 'qtd' => 0,
@@ -433,7 +436,7 @@ class RoutesController
         $body = [
             'profile' => $this->isLogged(),
             'lang_opt' => $this->Language(true),
-            'language' => $this->Language(),
+            'language' => $language,
             'category' => $this->xtream->getAllCategory(),
             'msg' => $msg,
             'results' => $results
@@ -449,10 +452,12 @@ class RoutesController
         $data = false;
         $code = 400;
 
+        $language = $this->Language();
+
         $profile = $this->isLogged();
 
         if (!$profile) {
-            $data = ["error" => $this->msg->not_logged];
+            $data = ["error" => $language->warnings->not_logged];
         } else {
 
             $params = $req->getParsedBody();
@@ -488,10 +493,12 @@ class RoutesController
         $data = false;
         $code = 400;
 
+        $language = $this->Language();
+
         $profile = $this->isLogged();
 
         if (!$profile) {
-            $data = ["error" => $this->msg->not_logged];
+            $data = ["error" => $language->warnings->not_logged];
         } else {
 
             $params = $req->getParsedBody();
@@ -520,10 +527,12 @@ class RoutesController
         $data = false;
         $code = 400;
 
+        $language = $this->Language();
+
         $profile = $this->isLogged();
 
         if (!$profile) {
-            $data = ["error" => $this->msg->not_logged];
+            $data = ["error" => $language->warnings->not_logged];
         } else {
 
             $params = $req->getParsedBody();
@@ -562,10 +571,12 @@ class RoutesController
         $data = false;
         $code = 400;
 
+        $language = $this->Language();
+
         $profile = $this->isLogged();
 
         if (!$profile) {
-            $data = ["error" => $this->msg->not_logged];
+            $data = ["error" => $language->warnings->not_logged];
         } else {
 
             $params = $req->getParsedBody();
@@ -588,9 +599,7 @@ class RoutesController
 
     public function Profile($req, $res, $args)
     {
-
-        $filters = $this->filters;
-
+        $language = $this->Language();
         $profile = $this->isLogged();
         $data_profile = false;
 
@@ -598,10 +607,87 @@ class RoutesController
             return $res->withHeader('Location', '/')->withStatus(302);
             exit;
         } else {
+
             $data_profile = $this->crud->getProfileData($profile['id']);
             $data_profile['list'] = isset($data_profile['list'][0]) ? json_decode($data_profile['list']) : [];
             $data_profile['watched'] = isset($data_profile['watched'][0]) ? json_decode($data_profile['watched']) : [];
+            $data_profile['xtream'] = isset($data_profile['xtream'][0]) ? json_decode($data_profile['xtream'])[0] : [];
         }
+
+        $warning = [];
+
+        if (isset($_GET['edit'])) {
+            if ($_GET['edit'] == 'success') {
+                $warning['class'] = 'success_form';
+                $warning['msg'] = $language->warnings->edit_success;
+            } else if ($_GET['edit'] == 'passError') {
+                $warning['class'] = 'error_form';
+                $warning['msg'] = $language->warnings->new_pass_error;
+            } else {
+                $warning['class'] = 'error_form';
+                $warning['msg'] = $language->warnings->edit_error;
+            }
+        }
+
+        print_r($data_profile);
+
+
+        $body = [
+
+            'profile' => $profile,
+            'lang_opt' => $this->Language(true),
+            'language' => $language,
+            'category' => $this->xtream->getAllCategory(),
+            'data_profile' => $data_profile,
+            'warning' => $warning
+        ];
+
+        return $this->renderer->render($res, "profile.php", $body);
+    }
+
+    public function editProfile($req, $res, $args)
+    {
+
+        $filters = $this->filters;
+        $profile = $this->isLogged();
+
+        if ($profile) {
+
+            $params = $req->getParsedBody();
+
+            $bind = false;
+            $column = false;
+            $msg_callback = "error";
+
+            if (isset($params['email'])) {
+
+                if ($filters->emailValid($params['email'])) {
+                    $bind = $filters->Xss($params['email']);
+                    $column = "email";
+                }
+            } else if (isset($params['password'], $params['confirm_password'])) {
+
+                $password = $filters->Xss($params['password']);
+
+                if (strlen($password) > 3 && strlen($password) < 50) {
+                    $confirm_password = $filters->Xss($params['confirm_password']);
+                    if ($confirm_password == $password) {
+                        $bind = md5($password);
+                        $column = 'pass';
+                    } else $msg_callback = "passError";
+                } else $msg_callback = "passError";
+            }
+
+            if ($bind && $column) $update = $this->crud->profileEdit($column, $bind, $profile['id']);
+            else $update = false;
+
+            if ($update) {
+                $msg_callback = "success";
+            }
+
+            return $res->withHeader('Location', '/profile' . '?edit=' . $msg_callback)->withStatus(302);
+        }
+
 
         $body = [
 
@@ -609,12 +695,10 @@ class RoutesController
             'lang_opt' => $this->Language(true),
             'language' => $this->Language(),
             'category' => $this->xtream->getAllCategory(),
-            'data_profile' => $data_profile
         ];
 
         return $this->renderer->render($res, "profile.php", $body);
     }
-
 
     public function pageError($req, $res, $args)
     {

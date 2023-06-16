@@ -45,32 +45,27 @@
 							<span class="error_form"><?= $error ?? '' ?></span>
 							
 							<div class="sign__group">
-								<input type="text" name="name" class="sign__input" placeholder="Name">
+								<input type="text" name="name" class="sign__input" placeholder="<?=$language->register->name?>">
 							</div>
 
 							<div class="sign__group">
-								<input type="text" name="email" class="sign__input" placeholder="Email">
+								<input type="text" name="email" class="sign__input" placeholder="<?=$language->register->email?>">
 							</div>
 
 							<div class="sign__group">
-								<input type="text" name="username" class="sign__input" placeholder="Username">
+								<input type="text" name="username" class="sign__input" placeholder="<?=$language->register->username?>">
 							</div>
 
 
 							<div class="sign__group">
-								<input type="password" name="password" class="sign__input" placeholder="Password">
-							</div>
-
-							<div hidden class="sign__group sign__group--checkbox">
-								<input id="remember" name="remember" type="checkbox" checked="checked">
-								<label for="remember">I agree to the <a href="privacy.html">Privacy Policy</a></label>
+								<input type="password" name="password" class="sign__input" placeholder="<?=$language->register->password?>">
 							</div>
 							
 							<input name="redirect" type="hidden" value="<?=$redirect ?? ''?>">
 
-							<button type="submit" class="sign__btn" type="button">Sign up</button>
+							<button type="submit" class="sign__btn" type="button"><?=$language->register->sign_up?></button>
 
-							<span class="sign__text">Already have an account? <a href="/login<?=$redirect ? '/'.$redirect : ''?>">Sign in!</a></span>
+							<span class="sign__text"><?=$language->register->already_account?> <a href="/login<?=$redirect ? '/'.$redirect : ''?>"><?=$language->register->sign_in?>!</a></span>
 						</form>
 						<!-- registration form -->
 					</div>

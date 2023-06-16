@@ -326,26 +326,35 @@ class CRUD
 
             $sql = "SELECT 
             (
-              SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id_video, 'type', c.type, 'name', c.name, 'img', c.img))
-              FROM (
-                SELECT c.id_video, c.type, c.name, c.img
-                FROM cache_info c
-                JOIN favorites f ON c.id_video = f.id_video AND c.type = f.type AND f.id_user = ?
-                GROUP BY c.id_video, c.type, c.name, c.img
-                ORDER BY MAX(f.id) DESC
-              ) AS c
+                SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id_video, 'type', c.type, 'name', c.name, 'img', c.img))
+                FROM (
+                    SELECT c.id_video, c.type, c.name, c.img
+                    FROM cache_info c
+                    JOIN favorites f ON c.id_video = f.id_video AND c.type = f.type AND f.id_user = ?
+                    GROUP BY c.id_video, c.type, c.name, c.img
+                    ORDER BY MAX(f.id) DESC
+                ) AS c
             ) AS list,
             (
-              SELECT JSON_ARRAYAGG(JSON_OBJECT('id', w.id_video, 'type', w.type, 'name', w.name, 'img', w.img))
-              FROM (
-                SELECT c.id_video, MIN(c.type) AS type, MIN(c.name) AS name, MIN(c.img) AS img
-                FROM cache_info c
-                JOIN watched w ON c.id_video = w.id_video AND c.type = w.type AND w.id_user = ?
-                GROUP BY c.id_video
-                ORDER BY MAX(w.id) DESC
-                LIMIT 30
-              ) AS w
-            ) AS watched; ";
+                SELECT JSON_ARRAYAGG(JSON_OBJECT('id', w.id_video, 'type', w.type, 'name', w.name, 'img', w.img))
+                FROM (
+                    SELECT c.id_video, MIN(c.type) AS type, MIN(c.name) AS name, MIN(c.img) AS img
+                    FROM cache_info c
+                    JOIN watched w ON c.id_video = w.id_video AND c.type = w.type AND w.id_user = ?
+                    GROUP BY c.id_video
+                    ORDER BY MAX(w.id) DESC
+                    LIMIT 30
+                ) AS w
+            ) AS watched,
+
+            (
+                SELECT JSON_ARRAYAGG(JSON_OBJECT('url', xtream.url, 'user', xtream.user, 'pass', xtream.pass))
+                FROM xtream 
+
+            ) AS xtream;
+        
+
+             ";
 
             
 
@@ -391,6 +400,28 @@ class CRUD
         }
 
         return $results;
+    }
+
+    public function profileEdit($column, $bind, $id_profile)
+    {
+
+        $data = [$bind, $id_profile];
+
+        $status = false;
+
+        try {
+
+            $sql = "UPDATE users SET $column = ? WHERE id_user = ?";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($data);
+            $status = $stmt->rowCount() > 0 ? true : false;
+
+        } catch (PDOException $e) {
+            print_r($e->getMessage());
+        }
+
+        return $status;
     }
 
 

@@ -24,6 +24,28 @@ $translation =  [
 
     ],
 
+    'login' => [
+
+        'username' => 'Usuario',
+        'password' => 'Senha',
+        'login' => 'Entrar',
+        'not_account' => "Ainda não tem uma conta?",
+        'sign_up' => 'Cadastre-se',
+        'sign_in' => 'Entrar'
+
+    ],
+
+    'register' => [
+
+        'name' => 'Nome',
+        'email' => 'Email',
+        'username' => 'Usuario',
+        'password' => 'Senha',
+        'sign_up' => 'Registrar',
+        'already_account' => 'Já está cadastrado?',
+        'sign_in' => 'Entrar'
+    ], 
+
     'details' => [
 
         'director' => 'Diretor',
@@ -59,6 +81,7 @@ $translation =  [
     ],
 
     'profile' => [
+
         'home' => 'Meu perfil',
         'list' => 'Minha lista',
         'watched' => 'Assistidos',
@@ -66,7 +89,47 @@ $translation =  [
         'later' => 'Você deixou para assistir depois',
         'later_no' => 'Você não salvou nada na sua lista ainda',
         'recent' => 'Últimos 30 títulos assistidos',
-        'recent_no' => 'Que tal assistir algo antes de voltar aqui ?'
+        'recent_no' => 'Que tal assistir algo antes de voltar aqui ?',
+
+        'title_profile_details' => 'Detalhes do perfil',
+
+        'title_new_password' => 'Mudar senha',
+        'new_password' => 'Nova senha',
+        'confirm_password' => 'Confirme a nova senha',
+
+        'title_xtream' => 'Atualizar lista Xtream',
+        'url' => 'URL',
+
+        'save' => 'Salvar',
+        'update' => 'Atualizar'
+
+    ],
+
+    'warnings' => [
+
+        // Errors
+
+        "name_invalid" => "O nome pode conter no máximo 60 caracteres.",
+        "email_invalid" => "Este e-mail é inválido, por favor insira um e-mail válido.",
+        "username_invalid" => "O nome de usuário contém caracteres ilegais ou tem mais de 30 caracteres.",
+        "pass_invalid" => "A senha pode conter no máximo 50 caracteres.",
+        "user_already_exists" => "O usuário já existe, crie um novo.",
+        "pass_user_invalid" => "Usuario ou senha incorretos.",
+        "generic" => "Ocorreu um erro. Por favor, tente novamente.",
+
+        // Success
+
+        "create_account" => "Usuario registado com sucesso.",
+
+        // Search
+        "caracteres_search" => "Você precisa fornecer no mínimo 2 caracteres ou no máximo 20 caracteres para pesquisar.",
+
+
+        // Profile
+        "not_logged" => "usuário não está logado.",
+        "edit_success" => "Perfil atualizado com sucesso!",
+        "edit_error" => "Ocorreu algum erro ao atualizar seu perfil, tente novamente.",
+        "new_pass_error" => "Senhas não são iguais ou caracteres são menor que 3 ou maior que 50."
     ]
 ];
 

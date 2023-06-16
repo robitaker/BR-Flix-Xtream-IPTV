@@ -1,5 +1,7 @@
 <?php
 
+//error_reporting(0);
+
 
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
@@ -21,10 +23,9 @@ include './src/tools/filters.php';
 $filters = new Filters();
 
 
-include './src/msg.php';
 include './src/controllers/main-controller.php';
 
-$routes = new RoutesController($dbInstance, $filters, $msg);
+$routes = new RoutesController($dbInstance, $filters);
 
 
 $app->get('/', [$routes, 'Index']);
@@ -49,25 +50,17 @@ $app->group('/profile', function (RouteCollectorProxy $group) use ($routes) {
 
     $group->get('', [$routes, 'Profile']);
 
-
     $group->post('/add-list', [$routes, 'addList']);
     $group->post('/remove-list', [$routes, 'removeList']);
-
     $group->post('/add-watched', [$routes, 'addWatched']);
     $group->post('/checkpoint-watched', [$routes, 'updateCheckpoint']);
+    $group->post('/edit', [$routes, 'editProfile']);
+    $group->post('/xtream-list', [$routes, 'xtreamList']);
 
 
 });
 
 
-
-
-
-
 $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', [$routes, 'pageError']);
-
-
-
-
 
 $app->run();

@@ -78,7 +78,7 @@
 							<!-- content tabs nav -->
 							<ul class="nav nav-tabs content__tabs content__tabs--profile" id="content__tabs" role="tablist">
 								<li class="nav-item">
-									<a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true"><?= $language->profile->list ?></a>
+									<a class="nav-link <?= !$warning ? 'active' : '' ?>" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="false"><?= $language->profile->list ?></a>
 								</li>
 
 								<li class="nav-item">
@@ -86,7 +86,7 @@
 								</li>
 
 								<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false"><?= $language->profile->settings ?></a>
+									<a class="nav-link <?= $warning ? 'active' : '' ?>" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false"><?= $language->profile->settings ?></a>
 								</li>
 							</ul>
 							<!-- end content tabs nav -->
@@ -94,17 +94,17 @@
 							<!-- content mobile tabs nav -->
 							<div class="content__mobile-tabs content__mobile-tabs--profile" id="content__mobile-tabs">
 								<div class="content__mobile-tabs-btn dropdown-toggle" role="navigation" id="mobile-tabs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<input type="button" value="Profile">
+									<input type="button" value="<?= !$warning ? $language->profile->list : $language->profile->settings ?>">
 									<span></span>
 								</div>
 
 								<div class="content__mobile-tabs-menu dropdown-menu" aria-labelledby="mobile-tabs">
 									<ul class="nav nav-tabs" role="tablist">
-										<li class="nav-item"><a class="nav-link active" id="1-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">Profile</a></li>
+										<li class="nav-item"><a class="nav-link <?= !$warning ? 'active' : '' ?>" id="1-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true"><?= $language->profile->list ?></a></li>
 
-										<li class="nav-item"><a class="nav-link" id="2-tab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">Subscription</a></li>
+										<li class="nav-item"><a class="nav-link" id="2-tab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false"><?= $language->profile->watched ?></a></li>
 
-										<li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false">Settings</a></li>
+										<li class="nav-item"><a class="nav-link <?= $warning ? 'active' : '' ?>" id="3-tab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false"><?= $language->profile->settings ?></a></li>
 									</ul>
 								</div>
 							</div>
@@ -121,17 +121,20 @@
 		</div>
 		<!-- end profile -->
 
+
+
 		<div class="container">
 			<!-- content tabs -->
 			<div class="tab-content">
-				<div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab">
+
+				<div class="tab-pane fade <?= !$warning ? 'show active' : '' ?>" id="tab-1" role="tabpanel" aria-labelledby="1-tab">
 					<section class="section section--border">
 						<div class="container">
 							<div class="row">
 								<!-- section title -->
 								<div class="col-12">
 									<div class="section__title-wrap">
-										<h2 class="section__title"><?= isset($data_profile['list'][0]) ? $language->profile->later : $language->profile->later_no?></h2>
+										<h2 class="section__title"><?= isset($data_profile['list'][0]) ? $language->profile->later : $language->profile->later_no ?></h2>
 
 										<div class="section__nav-wrap">
 
@@ -181,7 +184,7 @@
 								<!-- section title -->
 								<div class="col-12">
 									<div class="section__title-wrap">
-										<h2 class="section__title"><?= isset($data_profile['watched'][0]) ? $language->profile->recent : $language->profile->recent_no?></h2>
+										<h2 class="section__title"><?= isset($data_profile['watched'][0]) ? $language->profile->recent : $language->profile->recent_no ?></h2>
 
 										<div class="section__nav-wrap">
 
@@ -224,102 +227,114 @@
 					</section>
 				</div>
 
-				<div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="3-tab">
+				<div class="tab-pane fade <?= $warning ? 'show active' : '' ?>" id="tab-3" role="tabpanel" aria-labelledby="3-tab">
+
+					<br>
+					<?php if ($warning) { ?>
+					<div class="col-12 col-lg-6">
+						<label class="<?=$warning['class']?>"><?=$warning['msg']?></label>
+					</div>
+					<?php } ?>
+
 					<div class="row">
 						<!-- details form -->
 						<div class="col-12 col-lg-6">
-							<form action="#" class="form form--profile">
+							<form action="/profile/edit" method="post" class="form form--profile">
 								<div class="row row--form">
 									<div class="col-12">
-										<h4 class="form__title">Profile details</h4>
+										<h4 class="form__title"><?=$language->profile->title_profile_details?></h4>
 									</div>
+
 
 									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
 										<div class="form__group">
-											<label class="form__label" for="username">Username</label>
-											<input id="username" type="text" name="username" class="form__input" placeholder="User 123">
+											<label class="form__label" for="firstname">Email</label>
+											<input required value="<?= $profile['email'] ?>" type="email" name="email" class="form__input" placeholder="...">
+										</div>
+									</div>
+
+
+
+									<div class="col-12">
+										<button type="submit" class="form__btn" type="button"><?=$language->profile->save?></button>
+									</div>
+								</div>
+
+							</form>
+
+							<form action="/profile/edit" method="post" class="form form--profile">
+								<div class="row row--form">
+									<div class="col-12">
+										<h4 class="form__title"><?=$language->profile->title_new_password?></h4>
+									</div>
+
+
+									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
+										<div class="form__group">
+											<label class="form__label" for="firstname"><?=$language->profile->new_password?></label>
+											<input required type="password" name="password" class="form__input" placeholder="">
 										</div>
 									</div>
 
 									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
 										<div class="form__group">
-											<label class="form__label" for="email">Email</label>
-											<input id="email" type="text" name="email" class="form__input" placeholder="email@email.com">
-										</div>
-									</div>
-
-									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
-										<div class="form__group">
-											<label class="form__label" for="firstname">First Name</label>
-											<input id="firstname" type="text" name="firstname" class="form__input" placeholder="John">
-										</div>
-									</div>
-
-									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
-										<div class="form__group">
-											<label class="form__label" for="lastname">Last Name</label>
-											<input id="lastname" type="text" name="lastname" class="form__input" placeholder="Doe">
+											<label class="form__label" for="lastname"><?=$language->profile->confirm_password?></label>
+											<input required type="password" name="confirm_password" class="form__input" placeholder="">
 										</div>
 									</div>
 
 									<div class="col-12">
-										<button class="form__btn" type="button">Save</button>
+										<button type="submit" class="form__btn" type="button"><?=$language->profile->save?></button>
 									</div>
 								</div>
+
 							</form>
 						</div>
 						<!-- end details form -->
 
+						<?php if ($profile['level'] == 10) {?>
 						<!-- password form -->
 						<div class="col-12 col-lg-6">
-							<form action="#" class="form form--profile">
+							<form action="/profile/xtream-list" method="post" class="form form--profile">
 								<div class="row row--form">
 									<div class="col-12">
-										<h4 class="form__title">Change password</h4>
+										<h4 class="form__title"><?=$language->profile->title_xtream?></h4>
 									</div>
 
 									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
 										<div class="form__group">
-											<label class="form__label" for="oldpass">Old password</label>
-											<input id="oldpass" type="password" name="oldpass" class="form__input">
+											<label class="form__label" for="oldpass"><?=$language->login->username?></label>
+											<input value="<?=$data_profile['xtream']->user?>" type="text" name="username" class="form__input">
+										</div>
+									</div>
+
+
+									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
+										<div class="form__group">
+											<label class="form__label" for="confirmpass"><?=$language->login->password?></label>
+											<input  value="<?=$data_profile['xtream']->pass?>" type="text" name="password" class="form__input">
 										</div>
 									</div>
 
 									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
 										<div class="form__group">
-											<label class="form__label" for="newpass">New password</label>
-											<input id="newpass" type="password" name="newpass" class="form__input">
+											<label class="form__label" for="confirmpass"><?=$language->profile->url?></label>
+											<input  value="<?=$data_profile['xtream']->url?>" type="text" name="url" class="form__input">
 										</div>
 									</div>
-
-									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
-										<div class="form__group">
-											<label class="form__label" for="confirmpass">Confirm new password</label>
-											<input id="confirmpass" type="password" name="confirmpass" class="form__input">
-										</div>
-									</div>
-
-									<div class="col-12 col-md-6 col-lg-12 col-xl-6">
-										<div class="form__group">
-											<label class="form__label" for="select">Select</label>
-											<select name="select" id="select" class="form__select">
-												<option value="0">Option</option>
-												<option value="1">Option 2</option>
-												<option value="2">Option 3</option>
-												<option value="3">Option 4</option>
-											</select>
-										</div>
-									</div>
+			
 
 									<div class="col-12">
-										<button class="form__btn" type="button">Change</button>
+										<button type="submit" class="form__btn" type="button">Atualizar</button>
 									</div>
 								</div>
 							</form>
 						</div>
 						<!-- end password form -->
+						<?php } ?>
 					</div>
 				</div>
+
 			</div>
 			<!-- end content tabs -->
 		</div>

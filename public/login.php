@@ -46,18 +46,18 @@
 							<span class="error_form"><?= $error ?? '' ?></span>
 
 							<div class="sign__group">
-								<input name="username" type="text" class="sign__input" placeholder="Username">
+								<input name="username" type="text" class="sign__input" placeholder="<?=$language->login->username?>">
 							</div>
 
 							<div class="sign__group">
-								<input name="password" type="password" class="sign__input" placeholder="Password">
+								<input name="password" type="password" class="sign__input" placeholder="<?=$language->login->password?>">
 							</div>
 
 							<input name="redirect" type="hidden" value="<?=$redirect ?? ''?>">
 							
-							<button type="submit" class="sign__btn" type="button">Sign in</button>
+							<button type="submit" class="sign__btn" type="button"><?=$language->login->sign_in?></button>
 
-							<span class="sign__text">Don't have an account? <a href="/register<?=$redirect ? '/'.$redirect : ''?>">Sign up!</a></span>
+							<span class="sign__text"><?=$language->login->not_account?> <a href="/register<?=$redirect ? '/'.$redirect : ''?>"><?=$language->login->sign_up?>!</a></span>
 
 						</form>
 						<!-- end authorization form -->

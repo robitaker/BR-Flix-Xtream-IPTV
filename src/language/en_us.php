@@ -21,6 +21,28 @@ $translation =  [
         'suggestions' => 'Suggestions'
     ],
 
+    'login' => [
+
+        'username' => 'Username',
+        'password' => 'Password',
+        'login' => 'Login',
+        'not_account' => "Don't have an account?",
+        'sign_up' => 'Sign Up',
+        'sign_in' => 'Sign In'
+
+    ],
+
+    'register' => [
+
+        'name' => 'Name',
+        'email' => 'Email',
+        'username' => 'Username',
+        'password' => 'Password',
+        'sign_up' => 'Sign Up',
+        'already_account' => 'Already have an account?',
+        'sign_in' => 'Sign In'
+    ], 
+
     'details' => [
 
         'director' => 'Director',
@@ -64,10 +86,46 @@ $translation =  [
         'later' => 'You decided to watch later',
         'later_no' => "You haven't saved anything to your list yet",
         'recent' => 'Last 30 titles watched',
-        'recent_no' => 'How about watching something before coming back here?'
+        'recent_no' => 'How about watching something before coming back here?',
+
+        'title_profile_details' => 'Profile details',
+
+        'title_new_password' => 'Change password',
+        'new_password' => 'New password',
+        'confirm_password' => 'Confirm new passoword',
+
+        'title_xtream' => 'Update Xtream list',
+        'url' => 'URL',
+
+        'save' => 'Save',
+        'update' => 'Update'
+    ],
+
+    'warnings' => [
+
+        // Errors
+
+        "name_invalid" => "Name can contain a maximum of 60 characters.",
+        "email_invalid" => "This email is invalid, please enter a valid email.",
+        "username_invalid" => "Username contains illegal characters or is longer than 30 characters.",
+        "pass_invalid" => "Password can contain a maximum of 50 characters.",
+        "user_already_exists" => "User already exists, create a new one.",
+        "pass_user_invalid" => "Incorrect username or password.",
+        "generic" => "An error occurred, please try again.",
+
+        // Success
+
+        "create_account" => "User successfully registered.",
+
+        // Search
+        "caracteres_search" => "You need to provide a minimum of 2 characters or a maximum of 20 characters to search.",
+
+
+        // Profile
+        "not_logged" => "user is not logged in.",
+        "edit_success" => "Profile successfully updated!",
+        "edit_error" => "There was an error updating your profile, please try again.",
+        "new_pass_error" => "Passwords are not equal or characters are less than 3 or greater than 50."
     ]
 
 ];
-
-
-?>
