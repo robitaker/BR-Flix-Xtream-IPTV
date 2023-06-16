@@ -9,7 +9,6 @@ include 'xtream-controller.php';
 class RoutesController
 {
 
-    private $dbInstance;
     private $filters;
 
     private $crud;
@@ -18,7 +17,6 @@ class RoutesController
 
     public function __construct($db, $filters)
     {
-        $this->dbInstance = $db;
         $this->filters = $filters;
 
         $this->crud = new CRUD($db);
