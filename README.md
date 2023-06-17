@@ -1,32 +1,29 @@
 # BR-Flix (Xtream IPTV)
 
-Apenas um projeto desenvolvido para estudos, espero que gostem :D
+Just a project developed for studies, I hope you like it :D
 
-Características:
-  - Perfil próprio
-  - Assistidos recentemente
-  - Lista de favoritos
-  - Checkpoint (Salva seu tempo de reprodução)
-  - Proximo episódio automático (Pula para o próximo EP sempre que o video chega a 99%)
-  - Marcação de episódios já assistidos (Episódios que ja foram assistidos ficam com o nome verde)
-  - Barra de pesquisa
-  - Procure filmes e séries por categoria
-  - Multi linguagens (Atualmente Portugues/Ingles, você pode adicionar uma tradução para todo o site apenas modificando poucas linhas)
-  - Atualize a lista (Disponivel apenas para usuarios com level 10)
+Characteristics:
+  - Own profile
+  - Recently watched
+  - list of favorites
+  - Checkpoint (Saves your playing time)
+  - Automatic next episode (Jumps to the next EP whenever the video reaches 99%)
+  - Marking episodes already watched (Episodes that have already been watched are named green)
+  - search bar
+  - Browse movies and series by category
+  - Multi languages ​​(Currently Portuguese/English, you can add a translation for the entire site just by modifying a few lines)
+  - Update the list (Available only for users with level 10)
 
-Requesitos:
+Requests:
   - Composer
-  - Servidor Web com regravação de URL
-  - PHP 7.4 ou maior
-  - Lista IPTV com suporte para a API da Xtream
+  -Web server with URL rewriting
+  - PHP 7.4 or higher (8.1 recommended)
+  - IPTV list with Xtream API support
 
-Informações:
-  - slimphp/Slim foi usado para o controle de rotas e renderização, certifique-se de instalar corretamente.
-  - Um usuario padrão será criado com o Banco de dados, usuario: admin senha: 123 (Esse usuario já possui level 10)
-  - Certifique-se de configurar seu banco de dados no arquivo `src/db.php`
-  - De permissão de gravação para a pasta e todos seus arquivos: `src/storage`
+Information:
+  - slimphp/Slim was used for route control and rendering, make sure to install correctly.
+  - A default user will be created with the Database, user: admin password: 123 (This user already has level 10)
+  - Make sure you configure your database in the `src/db.php` file
+  - Write permission for the folder and all its files: `src/storage`
 
 ![Logo](https://i.ibb.co/XL3QKBc/git.png)
-
-  
-    
