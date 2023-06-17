@@ -5,11 +5,11 @@ Just a project developed for studies, I hope you like it :D
 Characteristics:
   - Own profile
   - Recently watched
-  - list of favorites
+  - List of favorites
   - Checkpoint (Saves your playing time)
   - Automatic next episode (Jumps to the next EP whenever the video reaches 99%)
   - Marking episodes already watched (Episodes that have already been watched are named green)
-  - search bar
+  - Search bar
   - Browse movies and series by category
   - Multi languages ​​(Currently Portuguese/English, you can add a translation for the entire site just by modifying a few lines)
   - Update the list (Available only for users with level 10)
