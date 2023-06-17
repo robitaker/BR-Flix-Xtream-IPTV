@@ -26,6 +26,7 @@ Informações:
   - Certifique-se de configurar seu banco de dados no arquivo `src/db.php`
   - De permissão de gravação para a pasta e todos seus arquivos: `src/storage`
 
-![Logo]([https://example.com/imagem.png](https://i.ibb.co/XL3QKBc/git.png)https://i.ibb.co/XL3QKBc/git.png)
+![Logo](https://i.ibb.co/XL3QKBc/git.png)
+
   
     
