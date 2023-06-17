@@ -26,4 +26,4 @@ Information:
   - Make sure you configure your database in the `src/db.php` file
   - Write permission for the folder and all its files: `src/storage`
 
-![Logo](https://i.ibb.co/XL3QKBc/git.png)
+![Logo](./preview.png)
