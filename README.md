@@ -14,7 +14,7 @@ Characteristics:
   - Multi languages ​​(Currently Portuguese/English, you can add a translation for the entire site just by modifying a few lines)
   - Update the list (Available only for users with level 10)
 
-Requests:
+Requirements:
   - Composer (`composer install`)
   - Web server with URL rewriting
   - PHP 7.4 or higher (8.1 recommended)
