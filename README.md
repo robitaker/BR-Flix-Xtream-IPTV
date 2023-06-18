@@ -27,3 +27,7 @@ Information:
   - Write permission for the folder and all its files: `src/storage`
 
 ![Logo](./preview.png)
+![Logo](./preview2.png)
+![Logo](./preview3.png)
+![Logo](./preview4.png)
+
